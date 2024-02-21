@@ -1,0 +1,18 @@
+
+.no-right-border{
+    border-right: none;
+}
+
+
+.brdSmallBlock_inner {
+    width: 100%;
+    height: auto;
+    display: flex;
+  }
+
+  
+.brdBigBlock_inner {
+    width: 100%;
+    height: auto;
+    display: flex;
+  }

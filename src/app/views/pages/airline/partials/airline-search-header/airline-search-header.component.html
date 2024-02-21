@@ -1,0 +1,109 @@
+<div class="card card-custom gutter-b card-stretch rounded-xl">
+    <!--begin::Header-->
+    <div class="card-header border-0">
+      <div class="card-toolbar">
+        <ul class="nav nav-bold nav-pills">
+          <li class="nav-item" (click)="setTripType('one')">
+            <a class="nav-link cursor-pointer" [ngClass]="airlineSearch.tripType == 'one' ? 'rounded-pill colorBg active' : 'nav-pills'">One Way</a>
+          </li>
+          <li class="nav-item cursor-pointer" (click)="setTripType('round')">
+            <a class="nav-link" [ngClass]="airlineSearch.tripType == 'round' ? 'rounded-pill colorBg active' : 'nav-pills'">Round Trip</a>
+          </li>
+          <li class="nav-item cursor-pointer" (click)="setTripType('multi')">
+            <a class="nav-link" [ngClass]="airlineSearch.tripType == 'multi' ? 'rounded-pill colorBg active' : 'nav-pills'">Multi city</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card-body pt-0 pl-6 pr-6">
+        <div class="card card-custom mb-3">
+            <div [ngClass]="blockClass">
+                <ng-container *ngFor="let flight of airlineSearch.flights; let i = index">
+                    <div [ngClass]="blockClass + '_inner'" *ngIf="!(i > 0 && airlineSearch.tripType == 'round')" >
+                        <div *ngIf="airlineSearch.tripType == 'multi'" class="text-centerrounded-top-right rounded-bottom-right">
+
+                            <button *ngIf="airlineSearch.flights.length > 1" type="button" (click)="removeFlight(i)" 
+                                class="airline-multi-button ml-2 pb-2 btn btn-danger btn-text-white btn-hover-text-white"
+                                [ngClass]="i == 0 ? (from == 'dashboard' ? 'mt-12' : 'mt-7') : (from == 'dashboard' ? 'mt-3': '')"> 
+                                <i class="fas fa-minus-circle text-white pr-0"></i>
+                            </button> 
+                        </div> 
+
+                        <airport-code-search
+                            class="searchCity" 
+                            [showLabel]="i == 0"
+                            [fontStyle]="fontStyle" 
+                            [flight]="flight"
+                            [field]="'from'"
+                            [label]="displayLabel.from"
+                            [(isSubmitted)]="isSubmitted">
+                        </airport-code-search>
+                        <span class="swipBtn"
+                        [ngClass]="i == 0 ? 'mt-8' : 'mt-1'"
+                         (click)="swipBtn(flight)">
+                            <i class="fas fa-exchange-alt text-primary"></i>
+                        </span>
+                        <airport-code-search  
+                            class="searchCity" 
+                            [showLabel]="i == 0"
+                            [label]="displayLabel.to"
+                            [fontStyle]="fontStyle" 
+                            [flight]="flight"
+                            [field]="'to'"
+                            [(isSubmitted)]="isSubmitted">
+                        </airport-code-search>
+                        <app-airport-search-date class="searchDate"
+                            [label]="'Departure'" 
+                            [showLabel]="i == 0"
+                            [fontStyle]="fontStyle" 
+                            [minDate]="minFromDate"
+                            [maxDate]="maxFromDate"
+                            [flight]="flight"
+                            [field]="'departureDate'">
+                        </app-airport-search-date>
+                        <app-airport-search-date class="searchDate" *ngIf="airlineSearch.tripType == 'round'"
+                            [label]="'Return'" 
+                            [showLabel]="i == 0"
+                            [fontStyle]="fontStyle" 
+                            [minDate]="flight.departureDate"
+                            [maxDate]="maxToDate"
+                            [flight]="airlineSearch.flights[1]"
+                            [field]="'departureDate'">
+                        </app-airport-search-date>
+                        
+                        <app-airline-search-travellers 
+                            class="searchDate no-right-border" 
+                            *ngIf="i==0 && !hidePtc"
+                            [fontStyle]="fontStyle" 
+                            [airlineSearch]="airlineSearch">
+                        </app-airline-search-travellers>
+                        
+                        <div *ngIf="showSearchButton && i==0" class="bg-primary rounded-top-right rounded-bottom-right">
+                            <button type="button" (click)="validateAndSearch()"
+                                class="btn btn-text-white btn-hover-text-white h3 border-0 font-weight-bold pt-4 pl-6 pb-4">
+                                Search <i class="far fa-arrow-alt-circle-right text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                </ng-container>
+            </div> 
+            <div *ngIf="airlineSearch.tripType == 'multi' && airlineSearch.flights.length < maxNumberOfFlights">
+                <button type="button" (click)="addFlight()" class="airline-multi-button ml-2 mt-7 btn btn-success btn-text-white btn-hover-text-white">
+                    <i class="fas fa-plus-circle text-white pr-0"></i> Add flight
+                </button> 
+            </div>
+
+            <div class="bg-warning p-3 h6" *ngIf="airlineSearch.flights.length >= maxNumberOfFlights">Max {{maxNumberOfFlights}} flights supported. </div>
+        </div>
+        <div class="d-flex pt-3 mt-3">
+            
+            <label class="checkbox">
+                <input type="checkbox" [(ngModel)]="airlineSearch.isLoyaltyAccountEnabled">
+                <span class="mr-1"></span>Do you have Frequent flyer number?
+            </label>
+            <input *ngIf="airlineSearch.isLoyaltyAccountEnabled" [(ngModel)]="airlineSearch.loyaltyAccountNumber" type="text" class="form-control w-200px ml-2" placeholder="Enter Frequent Flyer Code">
+        </div>
+    </div>
+</div>
+    

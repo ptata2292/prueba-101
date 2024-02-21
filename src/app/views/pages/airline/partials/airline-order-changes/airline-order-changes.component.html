@@ -1,0 +1,18 @@
+<ng-container *ngVar="orderChanges() as changes">
+    <div class="card card-custom mb-5" *ngIf="changes.length">
+        <div class="card-header">
+            <div class="card-title">
+                <div class="card-label">
+                    Order changes ({{changes.length}})
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <ol class="pl-4">
+                <li *ngFor="let change of changes">
+                    {{change.label}}
+                </li>
+            </ol>
+        </div>
+    </div>
+</ng-container>

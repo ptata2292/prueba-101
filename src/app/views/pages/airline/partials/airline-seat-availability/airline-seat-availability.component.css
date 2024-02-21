@@ -1,0 +1,66 @@
+.card-body {
+    min-height: 300px;
+    min-width: 300px;
+    margin-right: 5px;
+}
+table {
+    border-collapse: separate;
+    table-layout: fixed;
+}
+table td {
+    position: relative;
+    border-radius: 3px;
+}
+table.businessClass {
+    border-spacing: 10px 15px;
+}
+table.businessClass td {
+    height: 38px;
+}
+table.economyClass {
+    border-spacing: 5px 10px;
+}
+table.economyClass td {
+    height: 38px;
+}
+  
+.popover {
+    top: 50px; left: auto; width: 350px;
+}
+.seat-row {
+    position: relative; margin: 0px auto; width: 500px; 
+} 
+.seat-row .seat {
+    height: 35px; vertical-align: middle; border: 2px #fff solid; border-radius: 3px; text-align: center; line-height: 30px; cursor: pointer;
+} 
+.mainClass { 
+    position: relative;
+} 
+.mainClass > .seat-row .seat {
+    width: calc(100% / 7); 
+}
+.businessClass {
+    position: relative;
+} 
+.businessClass > .seat-row .seat {
+    width: calc(100% / 5); height: 45px; border: 4px #fff solid;
+}
+.bg-complete {
+    background-color: #ddd; cursor: default; 
+} 
+.bg-complete:after, .bg-complete:before {
+    content: ""; 
+    width: 1px; 
+    height: 35px; 
+    top: 1px;
+    background: #bbb;
+    position: absolute;
+    transform: rotate(-45deg);
+}
+.bg-complete:after { 
+    transform: rotate(45deg); 
+}
+
+.pointer{
+    cursor: pointer;
+}

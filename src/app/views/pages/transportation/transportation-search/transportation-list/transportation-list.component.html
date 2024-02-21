@@ -1,0 +1,293 @@
+<div *ngIf="isLoading">
+    <mat-spinner class="spinner" [diameter]="30"></mat-spinner>
+</div>
+<!--begin:: ONE Row-->
+<div *ngIf="!isLoading && this.radioSelected == 'one'" class="row gutter-b mt-5">
+    <div class="col-12">
+        <!--begin::Card-->
+        <div class="card card-custom mb-3" *ngFor="let flight of flightList">
+            <div class="card-body p-0">
+                <div class="d-flex align-items-center flex-wrap p-5" [ngClass]="flight.selected ? 'border-solid border-2 border-success rounded' : ''">
+                    <div class="d-flex align-items-center flex-lg-fill w-35">
+                        <div class="symbol symbol-50 bg-gray-300 mr-4">
+                             <img (error) ="onImgError($event)" [src]="getImageName(flight.departureFlight.flightSegments[0].transportationID)" alt="image" />
+                        </div>
+                        <div class="d-flex flex-column flex-wrap">
+                            <h5 class="mb-1">{{flight.departureFlight.flightSegments[0].transportationName}}</h5>
+                            <div class="d-flex">
+                                <span class="text-dark-50 font-weight-bold mr-2">{{flight.departureFlight.flightSegments[0].transportationID + flight.departureFlight.flightSegments[0].flightNumber}}</span>
+                                <span class="text-dark-50 font-weight-bold mr-2">|</span>
+                                <span class="text-dark-50 font-weight-bold mr-2 text-truncate">{{flight.departureFlight.flightSegments[0].aircraftName}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center flex-lg-fill w-35">
+                        <div class="d-flex flex-column flex-wrap align-items-end">
+                            <h2 class="mb-1"> {{ flight.departureFlight.departureTime }}</h2>
+                            <span class="text-dark-50 font-weight-bold"> {{ flight.departureFlight.departureAirportCode }}</span>
+                        </div>
+                        <div [appTooltip]="flight.departureFlight" class="d-flex flex-column flex-wrap align-items-center min-w-150px pl-2 pr-2">
+                            <div class="hr-text mb-2 text-dark-50">{{ flight.departureFlight.flightDuration }}</div>
+                            <div *ngIf="flight.departureFlight.isPopUp" id="popover" class="popover fade show bs-popover-bottom" style="top: 65px; left: auto;" role="tooltip" x-placement="bottom">                
+                                <div class="arrow" style="bottom: -7px; left: 45%;"></div>
+                                <div class="popover-body font-size-lg text-center">{{flight.departureFlight.popUpMessage}}</div>            
+                            </div>
+                            <span class="text-primary font-weight-bold">{{ flight.departureFlight.numberOfStops }}</span>
+                        </div>
+                        <div class="d-flex flex-column flex-wrap">
+                            <h2 class="mb-1"> {{ flight.departureFlight.arrivalTime }}</h2>
+                            <span class="text-dark-50 font-weight-bold"> {{ flight.departureFlight.arrivalAirportCode }}</span>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-right">
+                        <h1 class="pt-3 mr-4">${{ getFare(flight.departureFlight.flightFares) | number : '1.2-2' }}</h1>
+                        <a (click)="toggleFare(flight.departureFlight)" class="btn btn-outline-primary font-weight-bold font-size-h4">
+                            {{ (!flight.departureFlight.showPrices ? "Show" : "Hide") + " Prices" }} <i class="fas" [ngClass]="!flight.departureFlight.showPrices ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>										
+            <div class="separator separator-dashed border-secondary" *ngIf="flight.departureFlight.showPrices"></div>
+            <!--begin::Items-->
+            <div class="d-flex justify-content-end flex-wrap" [@collapse]="!flight.departureFlight.showPrices">
+                <div *ngFor="let flightFare of flight.departureFlight.flightFares">
+                    <div
+                    class="d-flex bgLightyellow cursor-pointer text-center pl-5 pr-5 pt-3 pb-3"
+                    [ngClass]="flightFare.selectedFare == true ? 'bg-primary text-white' : 'bg-hover-primary text-hover-white'"
+                    (click)="selectFare(flight, flightFare)">
+                        <div class="d-flex flex-column">
+                            <span class="font-weight-bold opacity-60">{{flightFare.cabinType}}</span>
+                            <span class="font-size-h2">${{ flightFare.totalPrice | number : '1.2-2' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end::Items-->
+        </div>
+        <!--end::Card-->
+    </div>																
+</div>
+<!--end:: ONE Row-->
+
+<!--begin:: ONE Total-->
+<div class="colorBlock" *ngIf="!isLoading && this.radioSelected == 'one' && selectedFlight != null">
+    <div class="d-flex align-items-center flex-wrap p-3">
+        <div class="d-flex align-items-center flex-lg-fill">
+            <div class="symbol symbol-50 bg-white-o-30 mr-4">
+                 <img (error) ="onImgError($event)" [src]="getImageName(selectedFlight.departureFlight.flightSegments[0].transportationID)" alt="image" />
+            </div>
+            <div class="d-flex flex-column flex-wrap">
+                <h5 class="mb-1">{{selectedFlight.departureFlight.flightSegments[0].transportationName}}</h5>
+                <div class="d-flex">
+                    <span class="text-white-50 font-weight-bold mr-2">{{selectedFlight.departureFlight.flightSegments[0].transportationID + selectedFlight.departureFlight.flightSegments[0].flightNumber}}</span>
+                    <span class="text-white-50 font-weight-bold mr-2">|</span>
+                    <span class="text-white-50 font-weight-bold mr-2">{{selectedFlight.departureFlight.flightSegments[0].aircraftName}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex align-items-center flex-lg-fill">
+            <div class="d-flex flex-column flex-wrap align-items-end">
+                <h5 class="mb-1">{{ selectedFlight.departureFlight.departureTime }}</h5>
+                <span class="text-white-50 font-weight-bold">{{ selectedFlight.departureFlight.departureAirportCode }}</span>
+            </div>
+            <div class="d-flex flex-column flex-wrap align-items-center pl-2 pr-2">
+                <h5 class="mb-1">-</h5>
+                <span class="text-primary font-weight-bold">-</span>
+            </div>
+            <div class="d-flex flex-column flex-wrap">
+                <h5 class="mb-1">{{ selectedFlight.departureFlight.arrivalTime }}</h5>
+                <span class="text-white-50 font-weight-bold"> {{ selectedFlight.departureFlight.arrivalAirportCode }}</span>
+            </div>
+        </div>
+        <div class="d-flex align-items-right">
+            <h1 class="pt-3 mr-4">${{ getFare(selectedFlight.departureFlight.flightFares) | number : '1.2-2' }}</h1>
+            <a (click)="bookNow()" class="btn btn-outline-primary font-weight-bold font-size-h4 bg-white text-dark-75">
+                Book Now
+            </a>
+        </div>
+    </div>
+</div>
+<!--end:: ONE Total-->
+
+
+<!--begin:: ROUND Row-->
+<div class="row gutter-b mt-5" *ngIf="!isLoading && this.radioSelected == 'round'">
+    <div class="col-12">
+        <!--begin::Card-->
+        <div class="card card-custom mb-3" *ngFor="let flight of flightList">
+            <div class="card-body p-0">
+                <div class="d-flex align-items-center flex-wrap"  [ngClass]="flight.selected ? 'border-solid border-2 border-success rounded' : ''">
+                    <div class="d-flex flex-column flex-fill">
+                        <div class="d-flex flex-fill pt-4 pl-5">
+                            <div class="d-flex align-items-center w-450px">
+                                <div class="symbol symbol-50 bg-gray-300 mr-4">
+                                     <img (error) ="onImgError($event)" [src]="getImageName(flight.departureFlight.flightSegments[0].transportationID)" alt="image" />
+                                </div>
+                                <div class="d-flex flex-column flex-wrap">
+                                    <h5 class="mb-1">{{flight.departureFlight.flightSegments[0].transportationName}}</h5>
+                                    <div class="d-flex">
+                                        <span class="text-dark-50 font-weight-bold mr-2">{{flight.departureFlight.flightSegments[0].transportationID + flight.departureFlight.flightSegments[0].flightNumber}}</span>
+                                        <span class="text-dark-50 font-weight-bold mr-2">|</span>
+                                        <span class="text-dark-50 font-weight-bold mr-2">{{flight.departureFlight.flightSegments[0].aircraftName}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-lg-fill">
+                                <div class="d-flex flex-column flex-wrap align-items-end">
+                                    <h2 class="mb-1">{{ flight.departureFlight.departureTime }}</h2>
+                                    <span class="text-dark-50 font-weight-bold">{{ flight.departureFlight.departureAirportCode }}</span>
+                                </div>
+                                <div [appTooltip]="flight.departureFlight" class="d-flex flex-column flex-wrap align-items-center min-w-150px pl-2 pr-2">
+                                    <div class="hr-text mb-2 text-dark-50">{{ flight.departureFlight.flightDuration }}</div>
+                                    <div *ngIf="flight.departureFlight.isPopUp" id="popover2" class="popover fade show bs-popover-bottom" style="top: 65px; left: auto;" role="tooltip" x-placement="bottom">                
+                                        <div class="arrow" style="bottom: -7px; left: 45%;"></div>
+                                        <div class="popover-body font-size-lg text-center">{{flight.departureFlight.popUpMessage}}</div>            
+                                    </div>
+                                    <span class="text-primary font-weight-bold">{{ flight.departureFlight.numberOfStops }}</span>
+                                </div>
+                                <div class="d-flex flex-column flex-wrap">
+                                    <h2 class="mb-1">{{ flight.departureFlight.arrivalTime }}</h2>
+                                    <span class="text-dark-50 font-weight-bold">{{ flight.departureFlight.arrivalAirportCode }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="w-100">
+                        <div class="d-flex flex-fill pb-4 pl-5">
+                            <div class="d-flex align-items-center w-450px">
+                                <div class="symbol symbol-50 bg-gray-300 mr-4">
+                                     <img (error) ="onImgError($event)" [src]="getImageName(flight.returnFlight.flightSegments[0].transportationID)" alt="image" />
+                                </div>
+                                <div class="d-flex flex-column flex-wrap">
+                                    <h5 class="mb-1">{{flight.returnFlight.flightSegments[0].transportationName }}</h5>
+                                    <div class="d-flex">
+                                        <span class="text-dark-50 font-weight-bold mr-2">{{flight.returnFlight.flightSegments[0].transportationID + flight.returnFlight.flightSegments[0].flightNumber}}</span>
+                                        <span class="text-dark-50 font-weight-bold mr-2">|</span>
+                                        <span class="text-dark-50 font-weight-bold mr-2">{{flight.returnFlight.flightSegments[0].aircraftName}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center flex-lg-fill">
+                                <div class="d-flex flex-column flex-wrap align-items-end">
+                                    <h2 class="mb-1">{{ flight.returnFlight.departureTime }}</h2>
+                                    <span class="text-dark-50 font-weight-bold">{{ flight.returnFlight.departureAirportCode }}</span>
+                                </div>
+                                <div [appTooltip]="flight.returnFlight" class="d-flex flex-column flex-wrap align-items-center min-w-150px pl-2 pr-2">
+                                    <div class="hr-text mb-2 text-dark-50">{{ flight.returnFlight.flightDuration }}</div>
+                                    <div *ngIf="flight.returnFlight.isPopUp" id="popover3" class="popover fade show bs-popover-bottom" style="top: 140px; left: auto;" role="tooltip" x-placement="bottom">                
+                                        <div class="arrow" style="bottom: -7px; left: 45%;"></div>
+                                        <div class="popover-body font-size-lg text-center">{{flight.returnFlight.popUpMessage}}</div>            
+                                    </div>
+                                    <span class="text-primary font-weight-bold">{{ flight.returnFlight.numberOfStops }}</span>
+                                </div>
+                                <div class="d-flex flex-column flex-wrap">
+                                    <h2 class="mb-1">{{ flight.returnFlight.arrivalTime }}</h2>
+                                    <span class="text-dark-50 font-weight-bold">{{ flight.returnFlight.arrivalAirportCode }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hrVertical h-150px"></div>
+                    <div class="d-flex align-items-right pl-5 pr-5">
+                        <h1 class="pt-3 mr-4">${{ getFare(flight.departureFlight.flightFares) | number : '1.2-2' }}</h1>
+                        <a (click)="toggleFare(flight.departureFlight)" class="btn btn-outline-primary font-weight-bold font-size-h4">
+                            {{ (!flight.departureFlight.showPrices ? "Show" : "Hide") + " Prices" }} <i class="fas" [ngClass]="!flight.departureFlight.showPrices ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="separator separator-dashed border-secondary" *ngIf="flight.departureFlight.showPrices"></div>
+            <!--begin::Items-->
+            <div class="d-flex justify-content-end flex-wrap" [@collapse]="!flight.departureFlight.showPrices">
+                <div *ngFor="let flightFare of flight.departureFlight.flightFares">
+                    <div
+                    class="d-flex bgLightyellow cursor-pointer text-center pl-5 pr-5 pt-3 pb-3"
+                    [ngClass]="flightFare.selectedFare == true ? 'bg-primary text-white' : 'bg-hover-primary text-hover-white'" 
+                    (click)="selectFare(flight, flightFare)">
+                        <div class="d-flex flex-column">
+                            <span class="font-weight-bold opacity-60">{{flightFare.cabinType}}</span>
+                            <span class="font-size-h2">${{ flightFare.totalPrice | number : '1.2-2' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end::Items-->
+        </div>
+        <!--end::Card-->
+    </div>																
+</div>
+<!--end:: ROUND Row-->
+
+<!--begin:: ROUND Total-->
+<div class="colorBlock" *ngIf="!isLoading && this.radioSelected == 'round' && selectedFlight != null">
+    <div class="d-flex align-items-center flex-wrap p-3">
+        <div class="d-flex flex-fill">
+            <div class="d-flex flex-row flex-fill">
+                <div class="d-flex align-items-center flex-lg-fill">
+                    <div class="symbol symbol-50 bg-white-o-30 mr-4">
+                         <img (error) ="onImgError($event)" [src]="getImageName(selectedFlight.departureFlight.flightSegments[0].transportationID)" alt="image" />
+                    </div>
+                    <div class="d-flex flex-column flex-wrap">
+                        <h5 class="mb-1">{{selectedFlight.departureFlight.flightSegments[0].transportationName}}</h5>
+                        <div class="d-flex">
+                            <span class="text-white-50 font-weight-bold mr-2">{{selectedFlight.departureFlight.flightSegments[0].transportationID + selectedFlight.departureFlight.flightSegments[0].flightNumber}}</span>
+                            <span class="text-white-50 font-weight-bold mr-2">|</span>
+                            <span class="text-white-50 font-weight-bold mr-2">{{selectedFlight.departureFlight.flightSegments[0].aircraftName}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center flex-lg-fill">
+                    <div class="d-flex flex-column flex-wrap align-items-end">
+                        <h5 class="mb-1">{{ selectedFlight.departureFlight.departureTime }}</h5>
+                        <span class="text-white-50 font-weight-bold">{{ selectedFlight.departureFlight.departureAirportCode }}</span>
+                    </div>
+                    <div class="d-flex flex-column flex-wrap align-items-center pl-2 pr-2">
+                        <h5 class="mb-1">-</h5>
+                        <span class="text-primary font-weight-bold">-</span>
+                    </div>
+                    <div class="d-flex flex-column flex-wrap">
+                        <h5 class="mb-1">{{ selectedFlight.departureFlight.arrivalTime }}</h5>
+                        <span class="text-white-50 font-weight-bold"> {{ selectedFlight.departureFlight.arrivalAirportCode }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hrVerticalLight mr-5 h-50px"></div>
+            <div class="d-flex flex-row flex-fill">
+                <div class="d-flex align-items-center flex-lg-fill">
+                    <div class="symbol symbol-50 bg-white-o-30 mr-4">
+                         <img (error) ="onImgError($event)" [src]="getImageName(selectedFlight.returnFlight.flightSegments[0].transportationID)"/>
+                    </div>
+                    <div class="d-flex flex-column flex-wrap">
+                        <h5 class="mb-1">{{selectedFlight.returnFlight.flightSegments[0].transportationName}}</h5>
+                        <div class="d-flex">
+                            <span class="text-white-50 font-weight-bold mr-2">{{selectedFlight.returnFlight.flightSegments[0].transportationID + selectedFlight.returnFlight.flightSegments[0].flightNumber}}</span>
+                            <span class="text-white-50 font-weight-bold mr-2">|</span>
+                            <span class="text-white-50 font-weight-bold mr-2">{{selectedFlight.returnFlight.flightSegments[0].aircraftName}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center flex-lg-fill">
+                    <div class="d-flex flex-column flex-wrap align-items-end">
+                        <h5 class="mb-1">{{ selectedFlight.returnFlight.departureTime }}</h5>
+                        <span class="text-white-50 font-weight-bold">{{ selectedFlight.returnFlight.departureAirportCode }}</span>
+                    </div>
+                    <div class="d-flex flex-column flex-wrap align-items-center pl-2 pr-2">
+                        <h5 class="mb-1">-</h5>
+                        <span class="text-primary font-weight-bold">-</span>
+                    </div>
+                    <div class="d-flex flex-column flex-wrap">
+                        <h5 class="mb-1">{{ selectedFlight.returnFlight.arrivalTime }}</h5>
+                        <span class="text-white-50 font-weight-bold"> {{ selectedFlight.returnFlight.arrivalAirportCode }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hrVerticalLight mr-5 h-50px"></div>
+        </div>							
+        <div class="d-flex align-items-right">
+            <h1 class="pt-3 mr-4">${{ getFare(selectedFlight.departureFlight.flightFares) | number : '1.2-2' }}</h1>
+            <a (click)="bookNow()" class="btn btn-outline-primary font-weight-bold font-size-h4 bg-white text-dark-75">
+                Book Now
+            </a>
+        </div>
+    </div>
+</div>
+<!--end:: ROUND Total-->

@@ -1,0 +1,39 @@
+<div class="relative">
+    <div #travellersDiv class="searchContent" (click)="showPTC=!showPTC">
+        <span class="search_lbl text-dark-50 pb-2">Travellers <i
+            class="fas fa-users text-primary"></i>
+        </span>
+            
+        <div id="count" class="search_inputField count text-truncate" [ngClass]="fontStyle">
+            {{airlineSearch.travellers.length}} Traveller<ng-container *ngIf="airlineSearch.travellers.length > 1">s</ng-container>    
+        </div>
+    </div>
+
+    <div #countPopupDiv *ngIf="showPTC" class="card card-custom popoverCustom1 count-popover w-auto">
+        <div class="card-header mt-1">
+            <div class="form-group mb-0 mr-3">
+                <label class="font-size-h2 mb-0">Total</label>
+                <mat-form-field class="max-width-150 ml-5" appearance="outline">
+                    <mat-select [(ngModel)]="airlineSearch.travellers.length" (selectionChange)="totalNumberChanged($event)">
+                        <mat-option *ngFor="let number of numbers" [value]="number">
+                        {{number}}
+                        </mat-option>
+                    </mat-select> 
+                </mat-form-field> 
+            </div></div>
+        <div class="card-body p-5 max-width-350"> 
+                <div class="d-flex flex-wrap">
+                    <div class="form-group max-width-150 p-1" *ngFor="let traveller of airlineSearch.travellers; let i = index; trackBy:index">
+                        <label class="font-size-h5 mb-0">Traveller-{{(i + 1)}}</label>
+                        <mat-form-field class="w-100" appearance="outline"> 
+                            <mat-select [(ngModel)]="airlineSearch.travellers[i].ptc">
+                                <mat-option *ngFor="let ptcCode of supportedPtcs" [value]="ptcCode">
+                                    {{getPtcLabel(ptcCode)}}
+                                </mat-option>
+                            </mat-select> 
+                        </mat-form-field>
+                    </div> 
+                </div>
+        </div>
+    </div> 
+</div>

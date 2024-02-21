@@ -1,0 +1,143 @@
+<div *ngIf="isLoading" class="spinnerBg">
+  <mat-spinner class="spinner" [diameter]="30"></mat-spinner>
+</div>
+<div *ngIf="!isLoading" class="d-flex flex-column-fluid">
+  <!--begin::Container-->
+  <div class="container">
+    <!--begin::Dashboard-->
+    <!--begin::Row-->
+    <div class="row">
+      <div class="col-12">
+        <!--begin::Tiles Widget 1-->
+        <div class="card card-custom gutter-b card-stretch rounded-xl">
+          <!--begin::Header-->
+          <div class="card-header border-0">
+            <div class="card-toolbar">
+              <h5 class="text-muted mb-0">Try searching for a Destination, Airport, a specific hotel, or even a landmark!</h5>
+            </div>
+          </div>
+          <!--end::Header-->
+          <!--begin::Body-->
+          <form #searchForm class="card-body pt-0 pl-6 pr-6">
+            <div class="tab-content">
+              <div class="tab-pane fade active show" id="lr_tab_pane_1" role="tabpanel">
+                <div class="brdBigBlock">
+                  <div class="brdBigBlock_inner">
+                    <div #hotelPlaceDiv id="hotelDiv" (click)="clickChange('place')" class="searchCity" style="width: 48%;">
+                      <div class="searchContent">
+                        <span class="search_lbl text-dark-50 pb-2">Destination/Airport/Landmark/Hotel</span>
+                        <input (click)="clickChange('place')" *ngIf="click.place" id="place" type="text" class="search_inputField h1 text-truncate from" readonly="" value="{{ hotelSearchFormGroup.value.place}}" title="{{ hotelSearchFormGroup.value.place}}">
+                        <!-- <div class="form-group lessMlr-1">
+                          <input type="text" class="form-control" placeholder="Place">
+                        </div> -->
+                        <div class="lessMlr-1" *ngIf="!click.place">
+                          <mat-form-field appearance="outline" class="w-100">
+                            <!-- <mat-label>Destination/Airport/Landmark/Hotel</mat-label> -->
+                            <input type="text" (onSelect)="setAddress($event)" matInput value="{{ hotelSearchFormGroup.value.place}}" [formControl]="hotelSearchFormGroup.get('place')"
+                              [errorStateMatcher]="errorMatcher">
+                          </mat-form-field>
+                        </div> 
+                        <mat-error *ngIf="isSubmitted && hotelSearchFormGroup.get('place').hasError('required')">
+                          Destination/Airport/Landmark/Hotel is <strong>required</strong>
+                        </mat-error> 
+                        <mat-error *ngIf="isSubmitted && hotelSearchFormGroup.hasError('fromSelected')">Please Select From</mat-error>                         
+                      </div>
+                    </div>
+                    <datepicker-range class="searchDate" style="width: 32%;" #datePickerMultiple [(searchFormGroup)] = "hotelSearchFormGroup" [(click)] = "click" [(isSubmitted)] = "isSubmitted" [(isSearchPage)] = "isSearchPage" [(name)]="rangeNames"></datepicker-range>
+
+                    <div>
+                      <div #travellersDiv (click)="clickChange('count')" class="searchContent">
+                        <span class="search_lbl text-dark-50 pb-2">Rooms & Guests <i
+                            class="fas fa-angle-down text-primary"></i></span>
+                        <div *ngIf="click.count" id="count" class="search_inputField h2 count">
+                          {{hotelSearchFormGroup.value.rooms}}<span class="display6 text-dark-65 pl-1 count">Room</span>
+                          {{hotelSearchFormGroup.value.count}}<span class="display6 text-dark-65 pl-1 count">Guests</span>
+                        </div>
+                        <!--Begin Traveller::Count-->
+                        <!-- <div #countPopupDiv *ngIf="!click.count" class="card card-custom popoverCustom1 w-auto">
+                          <div class="card-body p-5">
+                            <div class="d-flex align-items-center justify-content-between p-4 flex-lg-wrap flex-xl-nowrap">
+                              <div class="d-flex flex-row">
+                                <div class="form-group mb-0 mr-3">
+                                  <label class="font-size-h5 mb-0">Adults</label>
+                                  <p class="font-size-sm text-dark-50 mb-1">&nbsp;</p>
+                                  <mat-form-field class="w-100" appearance="outline">
+                                    <mat-select #travellersSelect [formControl]="hotelSearchFormGroup.get('adults')">
+                                      <mat-option *ngFor="let number of numbers" [value]="number">
+                                        {{number}}
+                                      </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="isSubmitted && hotelSearchFormGroup.get('adults').hasError('required')">Please choose a number</mat-error>
+                                  </mat-form-field>
+                                </div>
+                                <div class="form-group mb-0 mr-3">
+                                  <label class="font-size-h5 mb-0">Childrens</label>
+                                  <p class="font-size-sm text-dark-50 mb-1">Between (2y - 17y)</p>
+                                  <mat-form-field class="w-100" appearance="outline">
+                                    <mat-select #travellersSelect [formControl]="hotelSearchFormGroup.get('childrens')">
+                                      <mat-option *ngFor="let number of wholeNumbers" [value]="number">
+                                        {{number}}
+                                      </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="isSubmitted && hotelSearchFormGroup.get('childrens').hasError('required')">Please choose a number</mat-error>
+                                  </mat-form-field>
+                                </div>
+                                <div class="form-group mb-0 mr-3">
+                                  <label class="font-size-h5 mb-0">Rooms</label>
+                                  <p class="font-size-sm text-dark-50 mb-1">Below (2y)</p>
+                                  <mat-form-field class="w-100" appearance="outline">
+                                    <mat-select #travellersSelect [formControl]="hotelSearchFormGroup.get('rooms')">
+                                      <mat-option *ngFor="let number of wholeNumbers" [value]="number">
+                                        {{number}}
+                                      </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="isSubmitted && hotelSearchFormGroup.get('rooms').hasError('required')">Please choose a number</mat-error>
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="card-footer bg-dark-o-40 p-5">
+                            <div class="d-flex justify-content-end">
+                              <button (click)="countChange(null)" type="button" class="btn btn-primary btn-pill mr-3">Apply</button>
+                            </div>
+                          </div>
+                        </div> -->
+                        <!--End Traveller::Count-->
+                        <div class="lessMlr-1" *ngIf="!click.count">
+                          <mat-form-field class="w-100" appearance="outline">
+                            <mat-select #travellersSelect (selectionChange)="countChange($event.value)" [formControl]="hotelSearchFormGroup.get('count')">
+                              <mat-option *ngFor="let number of numbers" [value]="number">
+                                {{number}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                        <mat-error *ngIf="isSubmitted && hotelSearchFormGroup.get('count').hasError('required')">Please choose a number</mat-error>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-center pt-5">
+                <button (click)="search()" type="button" class="btn btn-primary btn-pill btn-lg colorBg font-size-h3 w-200px btn-shadow">
+                  Search <i class="far fa-arrow-alt-circle-right"></i>
+                </button>
+              </div>
+              <div class="tab-pane fade" id="lr_tab_pane_2" role="tabpanel">Lorem Ipsum passages, and more recently with
+                desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum
+                passages, and more recently with desktop publishing software like Aldus PageMaker including versions of
+                Lorem Ipsum. Lorem Ipsum passages, and more recently with desktop publishing software like Aldus
+                PageMaker including versions of Lorem Ipsum.</div>
+            </div>
+          </form>
+          <!--end::Body-->
+        </div>
+        <!--end::Tiles Widget 1-->
+      </div>
+    </div>
+    <!--end::Row-->
+    <!--end::Dashboard-->
+  </div>
+  <!--end::Container-->
+</div>

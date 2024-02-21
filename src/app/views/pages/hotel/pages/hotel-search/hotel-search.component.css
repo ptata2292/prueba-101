@@ -1,0 +1,6 @@
+:host ::ng-deep .mat-form-field-flex {
+    background-color: #fff;
+}
+.table td {
+    padding: 1rem; border-top: 3px solid #EBEDF3;
+}

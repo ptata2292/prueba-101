@@ -1,0 +1,22 @@
+::ng-deep .rloc.mat-form-field-appearance-fill .mat-form-field-flex{
+    border-radius: 4px;
+    padding: 0.5em 0.75em;
+    background-color: rgba(0,0,0,.24);
+  }
+
+::ng-deep .rloc .mat-form-field-wrapper{
+    padding: 0;
+}
+
+::ng-deep .rloc.mat-form-field-appearance-fill .mat-form-field-infix {
+    padding: 0;
+}
+::ng-deep .rloc .mat-form-field-underline{
+    display: none;
+}
+::ng-deep .rloc.mat-form-field{
+    width: 100px;
+}
+::ng-deep .rloc .mat-select-value, ::ng-deep .rloc .mat-select-arrow {
+    color: #ffffff;
+  }

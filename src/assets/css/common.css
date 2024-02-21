@@ -1,0 +1,221 @@
+.spinner {
+	align-items: center;
+  justify-content: center;
+  position: fixed !important;
+  top: 50%;
+  left: 50%;
+  z-index: 10;
+}
+.spinner-bottom {
+	align-items: center;
+  left: 50%;
+}
+.spinner:before {
+  display: none;
+}
+.spinnerBg {
+  width: 100%;
+  height: 100%;
+}
+.mat-progress-spinner circle, .mat-spinner circle {
+  stroke: #3f51b5;
+}
+.brdBigBlock {
+  border: 1px solid #dbede3;
+  border-radius: 1.25rem;
+}
+.brdBigBlock_inner {
+  width: 100%;
+  height: 95px;
+  display: flex;
+}
+.brdBigBlock_inner .searchCity {
+  width: 25%;
+  height: 100%;
+  border-right: solid 1px #dbede3;
+}
+.brdBigBlock_inner .searchDate {
+  width: 16%;
+  height: 100%;
+  border-right: solid 1px #dbede3;
+}
+.brdBigBlock_inner .searchContent {
+  padding: 17px 20px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+.brdBigBlock_inner .search_lbl {
+  font-size: 1.2rem;
+}
+.brdBigBlock_inner .search_inputField {
+  border: 0;
+  outline: 0;
+  background: none;
+  max-height: 36px;
+  cursor: pointer;
+  padding: 0px;
+  margin: 0px;
+  letter-spacing: -0.5px;
+}
+.brdBigBlock_inner .swipBtn {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  margin-left: -22px;
+  margin-top: 25px;
+  border: 1px solid #eee;
+  border-radius: 100%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-box-shadow: 0 1px 30px 0 rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 1px 30px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 30px 0 rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  cursor: pointer;
+}
+.brdSmallBlock {
+  border-radius: 0.42rem;
+}
+.brdSmallBlock_inner {
+  width: 100%;
+  height: 70px;
+  display: flex;
+}
+.brdSmallBlock_inner .searchCity {
+  width: 20%;
+  height: 100%;
+  border-right: solid 1px #dbede3;
+}
+.brdSmallBlock_inner .searchDate {
+  width: 12%;
+  height: 100%;
+  border-right: solid 1px #dbede3;
+}
+.brdSmallBlock_inner .searchContent {
+  padding: 9px 15px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+.brdSmallBlock_inner .search_lbl {
+  font-size: 1rem;
+}
+.brdSmallBlock_inner .search_inputField {
+  border: 0;
+  outline: 0;
+  background: none;
+  max-height: 36px;
+  cursor: pointer;
+  padding: 0px;
+  margin: 0px;
+  letter-spacing: -0.5px;
+}
+.brdSmallBlock_inner .swipBtn {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  margin-left: -15px;
+  margin-top: 20px;
+  border: 1px solid #eee;
+  border-radius: 100%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  cursor: pointer;
+}
+.lessMlr-1 {
+  margin-left: -1rem; margin-right: -1rem;
+}
+.lessMtlr {
+  margin-left: -1rem; margin-right: -1rem; margin-top: -0.7rem;
+}
+.bgLightyellow {
+  background-color: lightyellow;
+}
+.hr-text {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  font-size: 1.2rem;
+}
+.hr-text::before, .hr-text::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px dashed #ccc;
+}
+.hr-text::before {
+  margin-right: .25em;
+}
+.hr-text::after {
+  margin-left: .25em;
+}
+.colorBlock {
+  position: fixed;
+  bottom: 0px;
+  left: 4%;
+  background-color: #0c366a;
+  color: #fff !important;
+  width: 92%;
+  border-radius: 0.5rem;
+  margin: 0px auto;
+  z-index: 1;
+}
+.popoverCustom1 {
+  position: absolute !important;
+  right: 20px;
+  top: 115px;
+  z-index: 1;
+}
+.popoverCustom2 {
+  will-change: transform;
+  transform: translate3d(0px, 0px, 0px);
+}
+.colorBg {
+  background-color: #000099 !important;
+  border-color: #0c366a !important;
+}
+.footer {
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+}
+.border-solid {
+  border-style: solid;
+}
+.mat-elevation-z8 {
+  box-shadow: none;
+}
+tr.mat-header-row {
+  height: 45px !important;
+}
+.mat-header-cell {
+  font-size: 14px;
+}
+.borderHeader {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.fixed-btm {
+  position: fixed; bottom: 0px; right: 4%;
+}
+.pac-container:after {
+  /* Disclaimer: not needed to show 'powered by Google' if also a Google Map is shown */
+  background-image: none !important;
+  height: 0px;
+}
+
+.w-40 {
+  width: 40% !important;
+}
+
+.flex-grow-100 {
+  flex-grow: 100;
+}

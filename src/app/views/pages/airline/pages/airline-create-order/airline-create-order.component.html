@@ -1,0 +1,63 @@
+<!--begin::Entry-->
+<div *ngIf="offerViewModel != null" class="d-flex flex-column-fluid">
+    <!--begin::Container-->
+    <div class="container">
+        <!--begin::Dashboard-->
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-12">
+                <div class="brdSmallBlock gutter-b">
+                    <div class="brdSmallBlock_inner pt-4 flex-column">
+                        <h2 class="text-white pl-2 opacity-70">Booking Details</h2>
+                        <h6 class="text-white-50 pl-2">Review Fare and provide booking details</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end::Row-->
+        <!--begin::Row-->
+        <div class="row gutter-b">
+            <div class="col-9">
+                <!--begin::Details-->
+                <div class="card card-custom mb-3">
+                    <div class="card-body p-0">
+                        <app-airline-flight-item [flights]="offerViewModel.flights"></app-airline-flight-item>
+                        <!--begin::Top-->
+                    </div>
+                </div>
+                <!--end::Details-->
+                <!-- Start::Passenger -->
+
+                <app-airline-passenger-form [passengers]="offerViewModel.passengers"></app-airline-passenger-form>
+
+                <!-- end::Passenger -->
+
+                <app-airline-contact-form></app-airline-contact-form>
+                <!-- Start::Trip -->
+                <!-- end::Trip -->
+                <div class="mt-3">
+                    <app-airline-payment-form ></app-airline-payment-form>
+                </div>
+
+                <!-- Start::Buttons -->
+                <div class="row mt-4 align-items-end">
+                    <div class="col-12 ml-lg-auto text-right">
+                        <button type="button" (click)="cancel()" class="btn btn-secondary btn-lg">Cancel</button>
+                        <button type="submit" (click)="bookFlight()" class="btn btn-primary btn-lg font-weight-bold ml-2">Book Flight</button>
+                    </div>
+                </div>
+                <!-- End::Buttons -->
+            </div>
+            <!--Start::Price-->
+            <div class="col-3">
+                <app-airline-order-summary [passengers]="offerViewModel.passengers"></app-airline-order-summary>
+            </div>
+
+            <!--End::Price-->
+        </div>
+        <!--end::Row-->
+        <!--end::Dashboard-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::Entry-->

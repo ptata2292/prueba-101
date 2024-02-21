@@ -1,0 +1,43 @@
+<div *ngIf="orderId != null">
+    <div class="content d-flex flex-column flex-column-fluid pt-0" id="lr_content">
+
+        <div class="d-flex flex-column-fluid borderHeader">
+            <div class="container"> 
+                <div class="row">
+                    <div class="col-12">
+                        <div class="brdSmallBlock gutter-b d-flex">
+                            <div class="brdSmallBlock_inner pt-4 flex-column">
+                                <h2 class="text-white pl-2">Payment Details</h2>
+                                <h6 class="text-white-50 pl-2">Provide Payment Information</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="gutter-b">
+                    
+                    <div class="d-flex justify-content-end mb-3">
+                        <button (click)="backToOrderDetails()" class="btn btn-primary ml-5" title="Back to order details">Back to order details</button>
+                    </div>
+
+                    <div class="mb-3">
+                        <app-airline-errors [errors]="errors"></app-airline-errors>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-9">
+                            <app-airline-payment-form [hidePaymentTypeSelection]="true"></app-airline-payment-form>
+                        </div>
+                            
+                        <div class="col-3">
+                            <app-airline-order-summary *ngIf="orderViewModel" [passengers]="orderViewModel.passengers"></app-airline-order-summary>
+                            <div class="mt-5">
+                                <app-airline-payment-summary  *ngIf="orderViewModel" (makePayment)="pay()" [orderViewModel]="orderViewModel" [payments]="orderViewModel.payments" [passengers]="orderViewModel.passengers" ></app-airline-payment-summary>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

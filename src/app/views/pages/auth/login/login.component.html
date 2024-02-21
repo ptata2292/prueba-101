@@ -1,0 +1,73 @@
+<div *ngIf="isLoading" class="spinnerBg">
+  <mat-spinner class="spinner" [diameter]="30"></mat-spinner>
+</div>
+
+<!--begin::Main-->
+<div *ngIf="!isLoading" class="d-flex flex-column flex-root h-100">
+  <!--begin::Login-->
+  <div class="login login-lr login-signin-on d-flex flex-row-fluid" id="lr_login">
+    <div class="d-flex flex-center bgi-size-cover bgi-no-repeat flex-row-fluid lr-login--bg">
+      <div class="imgRight"></div>
+      <div class="imgLeft"></div>
+      <div class="login-form text-center text-white p-0 mb-10 position-relative overflow-hidden">
+        <!--begin::Login Header-->
+        <div class="d-flex flex-center mb-12">
+          <a routerLink="/Hotels">
+            <!-- <img [src]="getLogo()" class="max-h-100px max-w-450px" style="height:65px;display: block; width: auto;"> -->
+            <img src="assets/media/logoNew/t101-1.png" class="max-h-100px max-w-450px" style="height:65px;display: block; width: auto;">
+          </a>
+        </div>
+        <!--end::Login Header-->
+        <!--begin::Login Sign in form-->
+        <div class="login-signin">
+          <div class="mb-15">
+            <h3>Sign In</h3>
+            <p class="opacity-60 font-weight-bold">Enter your details to login to your account</p>
+          </div>
+          <form class="lr-form" id="lr_login_signin_form">
+            <div class="form-group">
+              <input #userCode matInput [formControl]="loginForm.get('userCode')" class="form-control form-control2 rounded-pill" type="text" placeholder="Login" name="email" autocomplete="off">
+            </div>
+            <div class="form-group">
+              <input #password matInput [formControl]="loginForm.get('password')" class="form-control form-control2 rounded-pill" type="password" placeholder="Password" name="password">
+            </div>
+            <div class="form-group d-flex flex-wrap justify-content-end px-8">
+              <div class="d-none checkbox-inline">
+                <label class="checkbox checkbox-outline checkbox-white text-white m-0">
+                <input type="checkbox" name="remember" />
+                <span></span>Remember me</label>
+              </div>
+            </div>
+            <div class="form-group text-center mt-5">
+              <button (click)="Login()" id="lr_login_signin_submit" class="btn btn-pill btn-outline-white font-weight-bold opacity-90 px-15 py-3">Sign In</button>
+            </div>
+          </form>
+        </div>
+        <!--end::Login Sign in form-->
+      </div>
+    </div>
+  </div>
+  <!--end::Login-->
+</div>
+<!--end::Main-->
+<div *ngIf="!isLoading" class="footerFixed">
+  <div class="d-flex justify-content-center mb-5">
+    <img class="mr-5" *ngIf="getTenantLoginLogos().includes('Linksrez')" src="../../../../../assets/media/login_lrz.png">
+    <!-- <img class="mr-6" *ngIf="getTenantLoginLogos().includes('Opentravel')" src="../../../../../assets/media/logoWhite2.svg"> -->
+    <img class="mr-6" *ngIf="getTenantLoginLogos().includes('AmericanAirlines')" src="../../../../../assets/media/login_aa.png">
+    <img class="mr-6" *ngIf="getTenantLoginLogos().includes('Marriott')" src="../../../../../assets/media/login_mr.png">
+    <img class="mr-5" *ngIf="getTenantLoginLogos().includes('AVIS')" src="../../../../../assets/media/login_avis.png">
+    <img class="mr-5" *ngIf="getTenantLoginLogos().includes('IBM')" src="../../../../../assets/media/login-ibm.png">
+    <img class="mr-5" *ngIf="getTenantLoginLogos().includes('RedHat')" src="../../../../../assets/media/login_rh.png">
+  </div>
+  <div class="d-flex justify-content-between bg-white-o-100 h-40px pl-10 pr-10 pt-2">
+    <div class="text-light font-size-lg mr-10">
+      <a href="#" target="_blank" class="text-light text-hover-primary">powered by Travel 101 ©️</a>
+    </div>
+    <div class="d-none">
+      <a href="#" class="text-light">Products</a>
+      <a href="#" class="text-light ml-5">Why us</a>
+      <a href="#" class="text-light ml-5">Get in touch</a>
+    </div>
+  </div>
+</div>

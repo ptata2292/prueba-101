@@ -1,0 +1,9 @@
+.lr-login--bg {
+    background-color: #0d0d66; background-image: url(../../media/bg1.png); background-position: 0px 0px; background-size: cover; background-repeat: no-repeat;
+}
+.imgRight {
+    background-image: url(../../media/bgRight.svg); background-position: 0px 50px; width: 180px; height: 537px; position: absolute; right: 0px; top: 30px; max-width: none; background-repeat: no-repeat;
+}
+.imgLeft {
+    background-image: url(../../media/bgLeft.svg); background-position: -150px 50px; width: 180px; height: 537px; position: absolute; left: 0px; top: 30px; max-width: none; background-repeat: no-repeat;
+}

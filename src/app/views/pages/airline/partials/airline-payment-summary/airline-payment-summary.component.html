@@ -1,0 +1,40 @@
+<div class="card card-custom">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">Payments</h3>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <ng-container *ngFor="let payment of payments">
+            <div class="d-flex pt-3 border-bottom justify-content-around" (click)="payment.showDetails=!payment.showDetails">
+                <div class="col-1"><i class="fas text-primary text-right fa-sm fa-circle"></i></div>
+                <div class="col-7 pl-1 text-left">
+                    <div class="font-weight-bold">
+                        {{payment.creditCardHolder}}
+                    </div>
+                    <div>
+                        {{payment.creditCardNumber}}
+                    </div>
+                    <div class="text-dark-50">{{payment.creditCardType}}</div>
+                </div>
+                <div class="col-4 font-size-h4 font-weight-bold text-right">${{ payment.amount| number : '1.2-2' }}
+                </div>
+            </div>
+        </ng-container>
+        
+        <div class="d-flex  pt-2  pb-2 justify-content-around">
+            <div class="col-7 text-left font-size-h4 pl-6">Total Payed</div>  
+            <div class="col-5 text-right font-weight-bold font-size-h3">${{ calculateOrderPayedAmount() | number : '1.2-2' }}</div>
+        </div>
+        
+        <ng-container *ngVar="calculateDue() as due">
+            <div class="d-flex  pt-2 border-top  pb-2 justify-content-around text-danger" *ngIf="due > 0">
+                <div class="col-7 text-left font-size-h4 pl-6">Due</div>  
+                <div class="col-5 text-right font-weight-bold font-size-h3">${{ due | number : '1.2-2' }}</div>
+            </div>
+            <div *ngIf="due > 0 && orderViewModel && !orderViewModel.editMode" class="text-right pb-4 pr-2">
+                <button (click)="pay()" class="btn btn-primary" title="Payment">Pay</button>
+            </div>
+        </ng-container>
+    </div>
+</div>

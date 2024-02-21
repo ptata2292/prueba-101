@@ -1,0 +1,11 @@
+.spinner-container{
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-items: center;
+}
+
+.spinner{
+    left: calc(50% - 100px);
+    width: 200px;
+}

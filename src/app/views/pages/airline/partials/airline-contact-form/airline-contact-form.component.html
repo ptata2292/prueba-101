@@ -1,0 +1,33 @@
+<form [formGroup]="contactFG" class="card card-custom mt-3">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">Trip contact Details</h3>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-4 form-group">
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Primary Email</mat-label>
+                    <input matInput formControlName="EmailAddress" type="email" name="email" email="true" required>
+                    <mat-error *ngIf="contactFG.get('EmailAddress').hasError('required')">Primary Email is Required</mat-error>
+                    <mat-error *ngIf="contactFG.get('EmailAddress').hasError('email')">Not a Valid Email</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-4 form-group">
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Country Code</mat-label>
+                    <input matInput formControlName="AreaCode" required>
+                    <mat-error *ngIf="contactFG.get('AreaCode').hasError('required')">Country Code is Required</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-4 form-group">
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Primary phone</mat-label>
+                    <input matInput formControlName="PhoneNumber" maxlength="13" required>
+                    <mat-error *ngIf="contactFG.get('PhoneNumber').hasError('required')">Primary phone is Required</mat-error>
+                </mat-form-field>
+            </div>                 
+        </div>
+    </div>
+</form>

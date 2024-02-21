@@ -1,0 +1,132 @@
+<div *ngIf="isLoading">
+    <mat-spinner class="spinner" [diameter]="30"></mat-spinner>
+</div>
+<div *ngIf="!isLoading && orderResponse.result.errors.length != 0 && orderResponse.result.status.value != 'COMPLETE'">
+    <!--begin::Entry-->
+    <div class="d-flex flex-column-fluid">
+        <!--begin::Container-->
+        <div class="container">
+            <!--begin::Dashboard-->
+            <div class="brdSmallBlock gutter-b d-flex">
+                <div class="brdSmallBlock_inner pt-2 flex-column align-items-center">
+                    <h1 class="text-white"><span class="opacity-70 font-weight-normal">Hotel: </span>Failed <i class="fas fa-times-circle text-danger icon-xl"></i></h1>
+                    <h6 class="text-white" *ngIf="orderId != null"><span class="opacity-70">Order Id: </span>{{orderId}}</h6>
+                </div>
+            </div>
+            <!--begin::Details-->
+            <!-- <div class="gutter-b" *ngFor="let flightSegment of orderResponse.flightSegment">
+                <div class="separator separator-solid"></div>
+                <table mat-table [dataSource]="orderResponse.passengerList" class="mat-elevation-z8">
+
+                    <ng-container matColumnDef="Index">
+                    <th mat-header-cell *matHeaderCellDef> # </th>
+                    <td mat-cell *matCellDef="let element"> {{element.index}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Name">
+                    <th mat-header-cell *matHeaderCellDef> Name </th>
+                    <td mat-cell *matCellDef="let element"> {{ getName(element) }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Gender">
+                        <th mat-header-cell *matHeaderCellDef> Gender </th>
+                        <td mat-cell *matCellDef="let element"> {{element.individual.gender}} </td>
+                    </ng-container>
+                
+                    <ng-container matColumnDef="DOB">
+                    <th mat-header-cell *matHeaderCellDef> DOB </th>
+                    <td mat-cell *matCellDef="let element"> {{element.individual.birthdate | date:'mediumDate'}} </td>
+                    </ng-container>
+                                            
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div> -->
+            <!--end::Details-->
+            <!--end::Dashboard-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Entry-->
+</div>
+
+<!--begin::Entry-->
+<div *ngIf="!isLoading && orderId != null && orderResponse.result.errors.length == 0 && orderResponse.result.status.value == 'COMPLETE'" class="d-flex flex-column-fluid">
+    <!--begin::Container-->
+    <div class="container">
+        <!--begin::Dashboard-->
+        <div class="brdSmallBlock gutter-b d-flex">
+            <div class="brdSmallBlock_inner pt-2 flex-column align-items-center">
+                <h1 class="text-white"><span class="opacity-70 font-weight-normal">Hotel: </span>Confirmed <i class="fas fa-check-circle text-success icon-xl"></i></h1>
+                <h6 class="text-white"><span class="opacity-70">Order Id: </span>{{orderId}}</h6>
+            </div>
+        </div>
+        <!--begin::Details-->
+        <div class="gutter-b">
+            <div class="card card-custom mb-3">
+                <div class="card-body p-0">
+                    <!--begin::Top-->
+                    <div class="d-flex" >
+                        <div class="htlImgBlock d-flex align-items-center justify-content-center">
+                            <img class="w-100" style="height: 150px;" (error) ="onImgError($event)" [src]="hotelInfo.hotelImageURL"alt="image">
+                        </div>
+                        <div class="d-flex flex-column flex-wrap flex-lg-fill p-5 w-100">
+                            <h3 class="mb-1">{{hotelInfo.basicPropertyInfo.name}}</h3>
+                            <div *ngIf="hotelInfo.contactInformation[0].address[0].addressLine.length == 0" class="d-flex text-muted font-weight-bold font-size-lg">
+                                <span> {{hotelInfo.contactInformation[0].address[0].street}}, {{hotelInfo.contactInformation[0].address[0].city}}, {{hotelInfo.contactInformation[0].address[0].stateProv.value || hotelInfo.contactInformation[0].address[0].stateProv.name}} {{hotelInfo.contactInformation[0].address[0].country.value || hotelInfo.contactInformation[0].address[0].country.name}}</span>
+                            </div>
+                            <div *ngIf="hotelInfo.contactInformation[0].address[0].addressLine.length>0" class="d-flex text-muted font-weight-bold font-size-lg">
+                                <span> {{hotelInfo.contactInformation[0].address[0].addressLine[0]}}, {{hotelInfo.contactInformation[0].address[0].city}}, {{hotelInfo.contactInformation[0].address[0].stateProv.value || hotelInfo.contactInformation[0].address[0].stateProv.name}} {{hotelInfo.contactInformation[0].address[0].country.value || hotelInfo.contactInformation[0].address[0].country.name}}</span>
+                            </div>
+                            <div class="d-block pt-3">
+                                <div class="btn btn-icon btn-outline-secondary btn-circle btn-xs mr-2">
+                                    <i class="fas fa-slash icon-1x opacity-50"></i>
+                                </div>															
+                                <span class="font-size-lg">{{orderResponse.order.offer[0].termsAndConditions[0].cancelPenalties[0].description[0].text[0].value}}</span>
+                            </div>
+                            <div class="d-flex font-size-lg font-weight-bold">
+                                <div class="d-block pt-4">
+                                    <i class="fas fa-house-user text-primary pr-2"></i>					
+                                    <span>{{getRoomInfo(orderResponse.order.offer[0].product[0].numberOfRooms)}}</span>
+                                </div>
+                                <div class="d-block pt-4 ml-10">
+                                    <i class="fas fa-door-open text-success pr-2"></i>
+                                    <span>{{orderResponse.order.offer[0].product[0].roomStay.dateTimeSpan.timeSpan.start | date:'mediumDate'}} - {{orderResponse.order.offer[0].product[0].roomStay.dateTimeSpan.timeSpan.end | date:'mediumDate'}}</span>
+                                </div>
+                            </div>
+                        </div>                        
+                    </div>
+                    <!--end::Top-->
+                    <!--begin::Separator-->
+                    <div class="separator separator-solid"></div>
+                    <!--end::Separator-->
+                    <table mat-table [dataSource]="orderResponse.order.offer" class="mat-elevation-z8">
+
+                        <ng-container matColumnDef="Item">
+                          <th mat-header-cell *matHeaderCellDef> Item </th>
+                          <td mat-cell *matCellDef="let element; let i = index"> Room {{i+1}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Description">
+                          <th mat-header-cell *matHeaderCellDef> Description </th>
+                          <td mat-cell *matCellDef="let element"> {{ element.product[0].roomStay.roomType.description.text[0].value | titlecase }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="Guests">
+                            <th mat-header-cell *matHeaderCellDef> Guests </th>
+                            <td mat-cell *matCellDef="let element"> {{getGuestInfo(element.product[0].guestCount)}} </td>
+                          </ng-container>
+                    
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!--end::Details-->
+        <!--end::Dashboard-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::Entry-->
+

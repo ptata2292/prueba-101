@@ -1,0 +1,58 @@
+.flight-fare-container {
+    .info-item {
+        display: flex;
+        flex-direction: column;
+
+        &.nonstop {
+            .flight-direction {
+                display: none;
+            }
+        }
+
+        .instructions {
+            display: flex;
+            flex-direction: column;
+            font-size: 1rem;
+
+            .instruction {
+                display: flex;
+                padding: 2px 0;
+
+                &-info {
+                    padding-left: 5px;
+                }
+            }
+        }
+    }
+
+    .info-item + .info-item {
+        padding-top: 5px;
+    }
+}
+
+.toggle-container {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+
+    &.icon-popup {
+        padding: 5px;
+    }
+
+    .chevron-icon {
+        padding-left: 5px;
+    }
+}
+
+.info-collapse-container{
+    display: flex;
+    flex-direction: column;
+
+    .toggle-wrapper{
+        margin-bottom: 10px;
+    }
+}
+
+.fas {
+    font-size: 1.25rem;
+}

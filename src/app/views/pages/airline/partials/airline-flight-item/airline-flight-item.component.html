@@ -1,0 +1,148 @@
+<ng-container *ngFor="let flight of flights; let i = index">
+    <div class="d-flex flex-fill pl-5" [ngClass]="flights.length == 1 ? 'pt-4 pb-4' : i == 0 ? 'pt-4': i == flights.length-1 ? 'pb-4' : ''">
+        <div class="d-flex align-items-center w-50">
+            <div class="symbol symbol-50 bg-gray-300 mr-4">
+                    <img (error) ="onImgError($event)" [src]="getImageName(flight.flightSegments[0].airlineID)" alt="image" />
+            </div>
+            <div class="d-flex flex-column flex-wrap">
+                <h5 class="mb-1">{{getOperatedCarrierText(flight.flightSegments[0].airlineID, flight.flightSegments[0].airlineName)}}</h5>
+                <h5 class="mb-1 d-none" *ngIf="getOperatedCarrierText(flight.flightSegments[0].airlineID, flight.flightSegments[0].airlineName) != ''">{{getOperatedCarrierText(flight.flightSegments[0].airlineID, flight.flightSegments[0].airlineName)}}</h5>
+                <div class="d-flex">
+                    <span class="text-dark-50 font-weight-bold mr-2">{{flight.flightSegments[0].airlineID + flight.flightSegments[0].flightNumber}}</span>
+                    <span class="text-dark-50 font-weight-bold mr-2">|</span>
+                    <span class="text-dark-50 font-weight-bold mr-2">{{flight.flightSegments[0].aircraftName}}</span>
+                </div>
+                <div>
+                    <span class="text-primary font-weight-bold cursor-pointer" (click)="flight.stopShow=!flight.stopShow">
+                        Flight details
+                        <i *ngIf="!flight.stopShow" class="material-icons text-primary align-middle icon-md">expand_more</i>
+                        <i *ngIf="flight.stopShow" class="material-icons text-primary align-middle icon-md">expand_less</i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex align-items-center flex-lg-fill"> 
+            <div class="d-flex flex-column flex-wrap align-items-end">
+                <h2 class="mb-1">{{ flight.departureTime }}</h2>
+                <span class="text-dark-50 font-weight-bold">{{ flight.departureDate}}</span>
+                <span class="text-dark-50 font-weight-bold">{{ flight.departureAirportCode }}</span>
+            </div>
+            <!-- [appTooltip]="flight"  -->
+            <div class="d-flex flex-column flex-wrap align-items-center min-w-150px pl-2 pr-2">
+                <div class="hr-text mb-2 text-dark-50">{{ flight.flightDuration }}</div>
+                <div *ngIf="flight.isPopUp" id="popover2" class="popover fade show bs-popover-bottom" style="top: 65px; left: auto;" role="tooltip" x-placement="bottom">
+                    <div class="arrow" style="bottom: -7px; left: 45%;"></div>
+                    <div class="popover-body font-size-lg text-center">{{flight.popUpMessage}}</div>
+                </div>
+                <span class="text-primary font-weight-bold cursor-pointer" (click)="flight.stopShow=!flight.stopShow"> {{ flight.numberOfStops }} <i *ngIf="flight.numberOfStops != 'Nonstop' && !flight.stopShow" class="material-icons text-primary align-middle icon-md">expand_more</i><i *ngIf="flight.numberOfStops != 'Nonstop' && flight.stopShow" class="material-icons text-primary align-middle icon-md">expand_less</i></span>
+            </div>
+            <div class="d-flex flex-column flex-wrap">
+                <h2 class="mb-1">{{ flight.arrivalTime }}
+                    <span *ngIf="nonZero(flight.totalDays)" class="label label-light-danger label-inline font-weight-bold align-top">+{{flight.totalDays}} day</span>
+                </h2>
+                <span class="text-dark-50 font-weight-bold">{{ flight.arrivalDate}}</span>
+                <span class="text-dark-50 font-weight-bold">{{ flight.arrivalAirportCode }}</span>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="flight.stopShow">
+        <div class="pl-15 pt-2 pb-2 rounded-0">
+            <div class="timeline-label text-center mb-3">
+                <span class="font-size-h3 text-secondary">Total Travel Time: <span class="text-primary">{{flight.flightDuration}}</span></span>
+            </div>
+            <div class="timeline timeline-justified timeline-4">
+                <div class="timeline-bar"></div>
+                <div *ngFor="let flightSegment of flight.flightSegments; let i = index">
+                    <div class="timeline-items">
+                        <div class="timeline-item">
+                            <div class="timeline-badge"> 
+                                <div class="bg-success"></div>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="d-flex align-items-center flex-wrap">
+                                    <div class="align-items-center w-50">
+                                        <div>
+                                            <div class="symbol symbol-50 bg-gray-300 mr-4">
+                                                <img (error) ="onImgError($event)" [src]="getImageName(flightSegment.airlineID)" alt="image">
+                                            </div>
+                                            <div class="d-flex flex-column flex-wrap">
+                                                <h5 class="mb-1">{{getOperatedCarrierText(flightSegment.airlineID, flightSegment.airlineName)}}</h5>
+                                                <h5 class="mb-1 d-none" *ngIf="getOperatedCarrierText(flightSegment.airlineID, flightSegment.airlineName) != ''">{{getOperatedCarrierText(flightSegment.airlineID, flightSegment.airlineName)}}</h5>
+                                                <div class="d-flex">
+                                                    <span class="text-dark-50 font-weight-bold mr-2">{{flightSegment.airlineID + flightSegment.flightNumber}}</span>
+                                                    <span class="text-dark-50 font-weight-bold mr-2">|</span>
+                                                    <span class="text-dark-50 font-weight-bold mr-2">{{flightSegment.aircraftName}}</span>
+                                                </div>
+                                                <div><app-airline-flight-fare-info [flightRules]="flightSegment.flightRules"></app-airline-flight-fare-info></div>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="orderId">
+                                            <div>
+                                                <div>
+                                                    <ng-contrainer *ngVar="getSelectedSeats(flightSegment) as selectedSeats">
+                                                        Seats:
+                                                        <ng-container *ngIf="!selectedSeats.length">
+                                                            <strong>not selected</strong>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="selectedSeats.length">
+                                                            <span *ngFor="let seat of getSelectedSeats(flightSegment)">
+                                                                <strong>{{seat.row}}{{seat.column}} ({{getPassengerLabel(seat.passenger) }})</strong>&nbsp;
+                                                            </span>   
+                                                        </ng-container>
+                                                        
+                                                    </ng-contrainer>
+                                                </div>
+                                                <div class="mt-3" *ngIf="orderViewModel">
+                                                    <span [hidden]="airlineLoaderService.isSearchResultLoaderShown()" class="text-primary font-weight-bold cursor-pointer" (click)="showHideSelectSeats(flightSegment)">
+                                                        View aircraft seat map
+                                                        <i *ngIf="!flightSegment.showSeatMap" class="material-icons text-primary align-middle icon-md">expand_more</i>
+                                                        <i *ngIf="flightSegment.showSeatMap" class="material-icons text-primary align-middle icon-md">expand_less</i>
+                                                    </span>
+                                                    <app-airline-loader [spinnerClass]="'d-flex'" [hidden]="airlineLoaderService.isSearchResultLoaderHidden()"></app-airline-loader>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="d-flex flex-column flex-wrap align-items-end">
+                                            <h2 class="mb-1">{{flightSegment.departureTime}}</h2>
+                                            <span class="text-dark-50 font-weight-bold">{{flightSegment.departureDate}}</span>
+                                            <span class="text-dark-50 font-weight-bold">{{flightSegment.departureAirportCode}}</span>
+                                        </div>
+                                        <div class="d-flex flex-column flex-wrap align-items-center min-w-150px pl-2 pr-2">
+                                            <div class="hr-text text-dark-50">{{flightSegment.flightDuration}}</div>
+                                        </div>
+                                        <div class="d-flex flex-column flex-wrap">
+                                            <h2 class="mb-1">{{flightSegment.arrivalTime}}</h2>
+                                            <span class="text-dark-50 font-weight-bold"> {{flightSegment.arrivalDate}}
+                                                <span *ngIf="flightSegment.changeOfDay !=null && flightSegment.changeOfDay !='0'" class="label label-light-danger label-inline font-weight-bold align-top">
+                                                    +{{flightSegment.changeOfDay}} day
+                                                </span>
+                                            </span>
+                                            <span class="text-dark-50 font-weight-bold">{{flightSegment.arrivalAirportCode}}</span>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timeline-label text-center mt-5 mb-0"
+                                *ngIf="i != flight.flightSegments.length-1 && flight.flightSegments[i+1].layover!= null && !flightSegment.showSeatMap">
+                                <span class="font-size-h3 text-secondary">Layover: <span class="text-primary">{{flight.flightSegments[i+1].layover}}</span></span>
+                            </div>
+                            <div class="timeline-label text-center mt-5"
+                                *ngIf="i != flight.flightSegments.length-1 && flight.flightSegments[i+1].departureTerminal != null  && flight.flightSegments[i+1].arrivalTerminal != null && !flightSegment.showSeatMap">
+                                <span class="font-size-h3 text-secondary">
+                                    <i class="fa fa-exclamation-triangle text-danger icon-xl"></i>  Teminal Change: <span class="text-primary">{{flight.flightSegments[i+1].departureTerminal + "->" + flight.flightSegments[i+1].arrivalTerminal}}</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="orderId">
+                        <app-airline-seat-availability *ngIf="flightSegment.showSeatMap && orderViewModel.seatMapLoaded" [flightSegment]="flightSegment" [passengers]="passengers" (seatChanged)="seatChanged($event)"></app-airline-seat-availability>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr class="w-100" *ngIf="i != flights.length-1">
+</ng-container>

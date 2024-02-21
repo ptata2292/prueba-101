@@ -1,0 +1,20 @@
+<div (click)="showPicker()" class="searchContent">
+    <span *ngIf="showLabel" class="search_lbl text-dark-50 pb-2 from">{{label}} <i
+        class="far fa-calendar-alt text-primary"></i></span>
+    <div *ngIf="!isDateEditorShown" class="search_inputField text-truncate" [ngClass]="fontStyle" (click)="showPicker(i)">
+        {{ flight[field] | date: 'dd MMM yyyy'}}
+    </div>
+    <!-- <div class="form-group lessMtlr">
+        <input type="text" class="form-control" placeholder="Place">
+    </div> -->
+    <div class="lessMtlr" *ngIf="isDateEditorShown">
+        <mat-form-field class="w-100" appearance="outline">
+            <input matInput [min]="minDate" [max]="maxDate" 
+                (click)="datepicker.open()" [errorStateMatcher]="errorMatcher"
+                [matDatepicker]="datepicker" [(ngModel)]="flight[field]"
+                (dateChange)="hidePicker()">
+            <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+            <mat-datepicker #datepicker></mat-datepicker>
+        </mat-form-field>
+    </div>
+</div> 

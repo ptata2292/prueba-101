@@ -1,0 +1,93 @@
+<div style="margin-left:100px; margin-top:50px;">
+  <mat-radio-group aria-label="Select an option" [(ngModel)]="radioSelected">
+    <mat-radio-button  (change)="radioChange($event)" value="one">One Way</mat-radio-button>
+    <mat-radio-button  (change)="radioChange($event)" value="round">Round Trip</mat-radio-button>
+  </mat-radio-group>
+
+  <form class="example-form">
+    <div class="row">
+      <div class="col-2">
+        <mat-form-field class="example-full-width">
+          <mat-label>Leaving To</mat-label>
+          <input type="text" matInput [formControl]="carRentalcarSearchFormGroup.get('to')" [matAutocomplete]="autoTo">
+          <mat-autocomplete #autoTo="matAutocomplete" [displayWith]="displayFn">
+            <mat-option *ngFor="let option of filteredToOptions | async" [value]="option">
+              {{ option.value + '-' + option.data }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-spinner *ngIf="loadingLeavingTo" [diameter]="15"></mat-spinner>
+      </div>
+      <div class="col-2">
+        <mat-form-field class="example-full-width">
+          <mat-label>Leaving From</mat-label>
+          <input type="text" matInput [formControl]="carRentalcarSearchFormGroup.get('from')" [matAutocomplete]="autoFrom">
+          <mat-autocomplete #autoFrom="matAutocomplete" [displayWith]="displayFn">
+            <mat-option *ngFor="let option of filteredFromOptions | async" [value]="option">
+              {{ option.value + '-' + option.data }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <div>{{filteredFromOptions | async | json}}</div>
+        <mat-spinner *ngIf="loadingLeavingFrom" [diameter]="15"></mat-spinner>
+      </div>
+    </div>
+  </form>
+  
+  <mat-form-field appearance="fill">
+    <mat-label>Enter a date range</mat-label>
+    <mat-date-range-input [formGroup]="carRentalcarSearchFormGroup" [min]="minDate" [max]="maxDate" [rangePicker]="picker">
+      <input matStartDate (dateChange)="startDateChange($event)" formControlName="start" placeholder="Start date">
+      <input matEndDate (dateChange)="endDateChange($event)" formControlName="end" placeholder="End date">
+    </mat-date-range-input>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-date-range-picker #picker></mat-date-range-picker>
+    <mat-error *ngIf="carRentalcarSearchFormGroup.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+    <mat-error *ngIf="carRentalcarSearchFormGroup.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+  </mat-form-field>
+  
+  <div class="form-group row">
+      <div *ngIf="singleDatePicker" class="input-group col-4" daterangepicker
+               [options]="singlePicker" (selected)="singleSelect($event)">
+          <span class="form-control uneditable-input"  name="daterange" >
+            {{ singleDate | date:'M/dd/y' }}
+          </span>
+          <span class="input-group-btn">
+            <a type="button" class="btn btn-default">
+              <i class="material-icons">calendar_today</i>
+            </a>
+          </span>
+      </div>    
+      <div *ngIf="!singleDatePicker"  class="input-group col-4" daterangepicker 
+            (selected)="selectedDate($event, mainInput)">
+        <span class="form-control uneditable-input"  name="daterange">
+          {{ mainInput.start | date:'M/dd/y' }}
+        </span>
+        <span class="input-group-btn">
+          <a type="button" class="btn btn-default">
+            <i class="material-icons">calendar_today</i>
+          </a>
+        </span>
+      </div>
+      <div class="input-group col-4" daterangepicker 
+            (click)="enableEndDate()" (selected)="selectedDate($event, mainInput)">
+        <span class="form-control uneditable-input"  name="daterange">
+           {{ mainInput.end != '' ? ( mainInput.end | date:'M/dd/y' ) : 'Tap to add a return date' }}
+        </span>
+        <span class="input-group-btn">
+          <a type="button" class="btn btn-default">
+              <i class="material-icons">calendar_today</i>
+          </a>
+        </span>
+      </div>
+  </div>  
+  <div *ngIf="radioSelected=='one'">
+  </div>
+  <div *ngIf="radioSelected=='round'">
+  </div>
+  
+  <p>Selected range: {{carRentalcarSearchFormGroup.value | json}}</p>
+</div>
+
+
+

@@ -1,0 +1,6 @@
+.card.card-custom.card-stretch.gutter-b {
+  height: calc(100% - 65px);
+}
+.brdBigBlock_inner .searchCity {
+  width: 40%;
+}

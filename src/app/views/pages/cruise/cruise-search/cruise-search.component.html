@@ -1,0 +1,241 @@
+<div *ngIf="isLoading" class="spinnerBg">
+    <mat-spinner class="spinner" [diameter]="30"></mat-spinner>
+</div>
+<div *ngIf="!isLoading"class="d-flex flex-column-fluid">
+    <!--begin::Container-->
+    <div class="container">
+        <!--begin::Dashboard-->
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-12">
+                <div class="brdSmallBlock bg-white gutter-b">
+                    <div class="brdSmallBlock_inner">
+                        <div class="searchDate">
+                            <!-- <div class="searchContent">
+                                <span class="search_lbl text-dark-50 pb-2">Trip Type <i
+                                        class="fas fa-angle-down text-primary"></i></span>
+                                <div id="trip" class="search_inputField h4">One Way</div>
+                                <div class="form-group lessMtlr d-none">
+                                    <input type="text" class="form-control" placeholder="Place">
+                                </div>
+                            </div> -->
+                            <div class="searchContent">
+                                <span class="search_lbl text-dark-50 pb-2">Trip Type <i
+                                    class="fas fa-angle-down text-primary"></i></span>
+                                <div (click)="clickChange('trip')" *ngIf="click.trip" id="trip" class="search_inputField h4">{{ searchFormGroup.value.trip | titlecase }} <span>Way</span></div>
+                                <div class="lessMtlr" *ngIf="!click.trip">
+                                  <mat-form-field class="w-100" appearance="outline">
+                                    <!-- <mat-label>Traveller</mat-label> -->
+                                    <mat-select #tripSelect (selectionChange)="tripSelectionChange($event.value)" [formControl]="searchFormGroup.get('trip')">
+                                      <mat-option *ngFor="let tripObj of tripType" [value]="tripObj">
+                                        {{ tripObj | titlecase }} {{ ' Way' }}
+                                      </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="isSubmitted && searchFormGroup.get('trip').hasError('required')">Please Select Trip</mat-error>
+                                  </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                        <div #fromDiv id="fromCityDiv" (click)="clickChange('from')" class="searchCity" style="width: 21%;">
+                            <div class="searchContent">
+                                <span class="search_lbl text-dark-50 pb-2">Leaving From</span>
+                                <input (click)="clickChange('from')" *ngIf="click.from" id="fromCity" type="text" class="search_inputField h4 text-truncate from" readonly="" value="{{ getAirPortDisplayName(searchFormGroup.value.from) }}" title="{{ getAirPortDisplayName(searchFormGroup.value.from) }}">
+                                <!-- <div class="form-group lessMtlr">
+                                  <input type="text" class="form-control" placeholder="Place">
+                                </div> -->
+                                <div class="lessMtlr" *ngIf="!click.from">
+                                  <mat-form-field appearance="outline" class="w-100">
+                                    <!-- <mat-label>Leaving From</mat-label> -->
+                                    <input #fromInput type="text" matInput [formControl]="searchFormGroup.get('from')" [matAutocomplete]="autoFrom"
+                                      [errorStateMatcher]="errorMatcher">
+                                    <mat-autocomplete (optionSelected)="fromChange($event)" #autoFrom="matAutocomplete" [displayWith]="displayFn">
+                                      <mat-option *ngFor="let option of filteredFromOptions | async" 
+                                          [value]="option">
+                                        {{ (option.value || option.name) + '-' + (option.data || option.id || '') }}
+                                      </mat-option>
+                                    </mat-autocomplete>
+                                  </mat-form-field>
+                                </div>
+                                <mat-error *ngIf="isSubmitted && searchFormGroup.get('from').hasError('required')">
+                                  Leaving From is <strong>required</strong>
+                                </mat-error>  
+                                <mat-error *ngIf="isSubmitted && searchFormGroup.hasError('fromSelected')">Please Select From</mat-error>                         
+                            </div>
+                        </div>
+                        <span class="swipBtn" (click)="swipBtn()">
+                            <i class="fas fa-exchange-alt text-primary"></i>
+                        </span>
+                        <div #toDiv id="toCityDiv" (click)="clickChange('to')" class="searchCity">
+                            <div class="searchContent">
+                                <span class="search_lbl text-dark-50 pb-2 to">Going To</span>
+                                <input (click)="clickChange('to')" *ngIf="click.to" id="toCity" type="text" class="search_inputField h4 text-truncate to" readonly="" value="{{ getAirPortDisplayName(searchFormGroup.value.to) }}" title="{{ getAirPortDisplayName(searchFormGroup.value.to) }}">
+                                <!-- <div class="form-group lessMtlr">
+                                  <input type="text" class="form-control" placeholder="Place">
+                                </div> -->
+                                <div class="lessMtlr" *ngIf="!click.to">
+                                  <mat-form-field appearance="outline" class="w-100">
+                                    <!-- <mat-label>Going To</mat-label> -->
+                                    <input #toInput type="text" matInput [formControl]="searchFormGroup.get('to')" [matAutocomplete]="autoTo"
+                                      [errorStateMatcher]="errorMatcher">
+                                    <mat-autocomplete (optionSelected)="toChange($event)"  #autoTo="matAutocomplete" [displayWith]="displayFn">
+                                      <mat-option *ngFor="let option of filteredToOptions | async" 
+                                        [value]="option">
+                                        {{ (option.value || option.name) + '-' + (option.data || option.id || '') }}
+                                      </mat-option>
+                                    </mat-autocomplete>                                    
+                                  </mat-form-field>
+                                </div> 
+                                <mat-error *ngIf="isSubmitted && searchFormGroup.get('to').hasError('required')">
+                                  Going To is <strong>required</strong>
+                                </mat-error>
+                                <mat-error *ngIf="isSubmitted && searchFormGroup.hasError('toSelected')">Please Select To</mat-error>
+                                <mat-error *ngIf="isSubmitted && searchFormGroup.hasError('toFromMatch')">To and From are Same</mat-error>
+                            </div>
+                        </div>
+                        <div class="searchDate"(click)="clickChange('start')" >
+                            <div id="startDate" class="searchContent">
+                                <span class="search_lbl text-dark-50 pb-2 from">Depature <i
+                                    class="far fa-calendar-alt text-primary"></i></span>
+                                <div (click)="clickChange('start')" *ngIf="click.start" class="search_inputField h4">
+                                  {{ searchFormGroup.value.start | date: 'dd'}} {{ searchFormGroup.value.start | date: 'MMM'}}  {{ searchFormGroup.value.start | date: 'yyyy'}}
+                                </div>
+                                <!-- <div class="form-group lessMtlr">
+                                  <input type="text" class="form-control" placeholder="Place">
+                                </div> -->
+                                <div class="lessMtlr" *ngIf="!click.start">
+                                  <mat-form-field class="w-100" appearance="outline">
+                                    <!-- <mat-label>Depature</mat-label> -->
+                                    <input matInput [min]="minToDate" [max]="maxToDate" 
+                                      (click)="picker1.open()" [errorStateMatcher]="errorMatcher"
+                                      [matDatepicker]="picker1" [formControl]="searchFormGroup.get('start')"
+                                      (dateChange)="startDateChange('change', $event)">
+                                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker1></mat-datepicker>
+                                  </mat-form-field>
+                                </div>
+                                <mat-error *ngIf="isSubmitted && searchFormGroup.get('start').hasError('required')">
+                                  Depature Date is <strong>required</strong>
+                                </mat-error>
+                            </div>
+                        </div>
+                        <div class="searchDate" (click)="enableRoundTrip()" [ngClass]="radioSelected == 'one' ? 'bg-gray-200' : ''">
+                            <div id="endDate" class="searchContent">
+                                <span class="search_lbl text-dark-50 pb-2">Return <i
+                                    class="far fa-calendar-alt text-primary"></i></span>
+                                <input (click)="clickChange('end')" *ngIf="click.end && this.radioSelected == 'one'" 
+                                  type="text" class="search_inputField h4 text-dark-50" 
+                                  readonly="" value="One Way">
+                                <div (click)="clickChange('end')" *ngIf="click.end && this.radioSelected == 'round'" 
+                                  class="search_inputField h4">
+                                  {{ searchFormGroup.value.end | date: 'dd'}} {{ searchFormGroup.value.end | date: 'MMM'}}  {{ searchFormGroup.value.end | date: 'yyyy'}}
+                                </div>
+                                <!-- <div class="form-group lessMtlr">
+                                  <input type="text" class="form-control" placeholder="Place">
+                                </div> -->
+                                <div class="lessMtlr" *ngIf="!click.end">
+                                  <mat-form-field class="w-100" appearance="outline" (click)="enableRoundTrip()">
+                                    <!-- <mat-label>From</mat-label> -->
+                                    <input matInput [min]="minFromDate" [max]="maxFromDate" 
+                                      (click)="picker2.open()" [errorStateMatcher]="errorMatcher"
+                                      [matDatepicker]="picker2" [formControl]="searchFormGroup.get('end')"
+                                      (dateChange)="endDateChange('change', $event)">
+                                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker2></mat-datepicker>
+                                    <!-- <mat-error *ngIf="isSubmitted && searchFormGroup.hasError('startEndMatch')">Return date cannot be earlier than Depature date
+                                    </mat-error> -->
+                                  </mat-form-field>
+                                </div>
+                                <mat-error *ngIf="isSubmitted && searchFormGroup.get('end').hasError('required')">
+                                  Return Date is <strong>required</strong>
+                                </mat-error>
+                                <mat-error *ngIf="isSubmitted && searchFormGroup.hasError('startEndMatch')">Return date cannot be earlier than Depature date
+                                </mat-error>
+                            </div>
+                        </div>
+                        <div class="searchDate">
+                            <div #travellersDiv (click)="clickChange('count')" class="searchContent">
+                                <span class="search_lbl text-dark-50 pb-2">Travellers <i
+                                    class="fas fa-angle-down text-primary"></i></span>
+                                <div *ngIf="click.count" id="count" class="search_inputField h4 count">{{searchFormGroup.value.count}} <span class="count">Traveller</span></div>
+                                <!--Begin Traveller::Count-->
+                                <!-- <div #countPopupDiv *ngIf="!click.count" class="card card-custom popoverCustom1 w-auto">
+                                  <div class="card-body p-5">
+                                    <div class="d-flex align-items-center justify-content-between p-4 flex-lg-wrap flex-xl-nowrap">
+                                      <div class="d-flex flex-row">
+                                        <div class="form-group mb-0 mr-3">
+                                          <label class="font-size-h5 mb-0">Adults</label>
+                                          <p class="font-size-sm text-dark-50 mb-1">&nbsp;</p>
+                                          <mat-form-field class="w-100" appearance="outline">
+                                            <mat-select #travellersSelect [formControl]="searchFormGroup.get('adults')">
+                                              <mat-option *ngFor="let number of numbers" [value]="number">
+                                                {{number}}
+                                              </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="isSubmitted && searchFormGroup.get('adults').hasError('required')">Please choose a number</mat-error>
+                                          </mat-form-field>
+                                        </div>
+                                        <div class="form-group mb-0 mr-3">
+                                          <label class="font-size-h5 mb-0">Childrens</label>
+                                          <p class="font-size-sm text-dark-50 mb-1">Between (2y - 17y)</p>
+                                          <mat-form-field class="w-100" appearance="outline">
+                                            <mat-select #travellersSelect [formControl]="searchFormGroup.get('childrens')">
+                                              <mat-option *ngFor="let number of wholeNumbers" [value]="number">
+                                                {{number}}
+                                              </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="isSubmitted && searchFormGroup.get('childrens').hasError('required')">Please choose a number</mat-error>
+                                          </mat-form-field>
+                                        </div>
+                                        <div class="form-group mb-0 mr-3">
+                                          <label class="font-size-h5 mb-0">Infants</label>
+                                          <p class="font-size-sm text-dark-50 mb-1">Below (2y)</p>
+                                          <mat-form-field class="w-100" appearance="outline">
+                                            <mat-select #travellersSelect [formControl]="searchFormGroup.get('infants')">
+                                              <mat-option *ngFor="let number of wholeNumbers" [value]="number">
+                                                {{number}}
+                                              </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="isSubmitted && searchFormGroup.get('infants').hasError('required')">Please choose a number</mat-error>
+                                          </mat-form-field>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="card-footer bg-dark-o-40 p-5">
+                                    <div class="d-flex justify-content-end">
+                                      <button (click)="countChange(null)" type="button" class="btn btn-primary btn-pill mr-3">Apply</button>
+                                    </div>
+                                  </div>
+                                </div> -->
+                                <!--End Traveller::Count-->
+                                <div class="lessMtlr" *ngIf="!click.count">
+                                  <mat-form-field class="w-100" appearance="outline">
+                                    <mat-select #travellersSelect (selectionChange)="countChange($event.value)" [formControl]="searchFormGroup.get('count')">
+                                      <mat-option *ngFor="let number of numbers" [value]="number">
+                                        {{number}}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+                                <mat-error *ngIf="isSubmitted && searchFormGroup.get('count').hasError('required')">Please choose a number</mat-error>
+                            </div>
+                        </div>
+                        <div class="bg-primary rounded-top-right rounded-bottom-right"
+                            style="width: 11%;">
+                            <button type="button" (click)="serach()"
+                                class="btn btn-text-white btn-hover-text-white h3 border-0 font-weight-bold pt-6 pl-6 pb-5">
+                                Search <i class="far fa-arrow-alt-circle-right text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end::Row-->
+        <!--begin::Row-->
+        <app-cruise-list [search]="searchSubject.asObservable()"></app-cruise-list>
+        <!--end::Row-->
+        <!--end::Dashboard-->
+    </div>
+    <!--end::Container-->
+</div>

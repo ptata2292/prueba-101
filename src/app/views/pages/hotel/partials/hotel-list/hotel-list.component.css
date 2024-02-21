@@ -1,0 +1,23 @@
+:host ::ng-deep .mat-progress-spinner circle, .mat-spinner circle {
+    stroke: blueviolet !important;
+}
+
+.htlImgBlock {
+    width: 230px;
+    min-width: 230px;
+    outline: none;
+    background-color: #ddd;
+  }
+  .htlImgBlock2 {
+    width: 230px;
+    min-width: 230px;
+    outline: none;
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  .htlPriceBlock {
+    width: 200px;
+    min-width: 200px;
+    display: flex;
+    flex-flow: column;  
+  }
+  

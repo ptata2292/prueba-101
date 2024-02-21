@@ -1,0 +1,9 @@
+table {
+  width: 100%;
+}
+.htlImgBlock {
+  width: 230px;
+  min-width: 230px;
+  outline: none;
+  background-color: #ddd;
+}
