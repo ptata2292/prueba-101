@@ -1,0 +1,120 @@
+<div class="card card-custom">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">Payment Information</h3>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row" *ngIf="!hidePaymentTypeSelection">
+            <div class="col-4 form-group">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Payment Type</mat-label>
+                    <mat-select [(value)]="paymentType" required>
+                        <mat-option *ngFor="let p of paymentTypes" [value]="p">
+                        {{p}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-8 form-group"></div>
+        </div>
+        <form *ngIf="paymentType == paymentTypeCreditCard" [formGroup]="creditCardFG" class="row">
+            <div class="col-12 form-group">
+                <mat-form-field appearance="outline">
+                    <mat-label>Credit Card Type</mat-label>
+                    <mat-select formControlName="CreditType" required>
+                        <mat-option *ngFor="let c of cardTypes" [value]="c.code">
+                        {{c.name}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="creditCardFG.get('CreditType').hasError('required')">Please choose Credit Card Type</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-4 form-group">
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Credit Card Number</mat-label>
+                    <input matInput appCreditCard autocomplete="off" formControlName="CreditCardNumber" required>
+                    <mat-error *ngIf="creditCardFG.get('CreditCardNumber').hasError('required')">Credit Card Number is Required</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-3 form-group">
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Security Code</mat-label>
+                    <input matInput appOnlyNumber formControlName="SecurityCode"  maxlength="3" required>
+                    <mat-error *ngIf="creditCardFG.get('SecurityCode').hasError('required')">Security Code is Required</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-2 form-group">
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Exp Month</mat-label>
+                    <mat-select formControlName="ExpMonth" required>
+                        <mat-option *ngFor="let m of monthArray" [disabled]="isMonthDisable(m)" [value]="m">
+                        {{m}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="creditCardFG.get('ExpMonth').hasError('required')">Please choose a Month</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-3 form-group">
+                <mat-form-field appearance="outline">
+                    <mat-label>Exp Year</mat-label>
+                    <mat-select (selectionChange)="yearChange($event.value)" formControlName="ExpYear" required>
+                        <mat-option *ngFor="let y of yearArray" [value]="y">
+                        {{y}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="creditCardFG.get('ExpYear').hasError('required')">Please choose a Year</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-6 form-group">
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>First Name on Card</mat-label>
+                    <input matInput formControlName="FirstNameonCard" required>
+                    <mat-error *ngIf="creditCardFG.get('FirstNameonCard').hasError('required')">First Name on Card is Required</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-6 form-group">
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Last Name on Card</mat-label>
+                    <input matInput formControlName="LastNameonCard" required>
+                    <mat-error *ngIf="creditCardFG.get('LastNameonCard').hasError('required')">Last Name on Card is Required</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-8 form-group">
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Street</mat-label>
+                    <input matInput formControlName="Street" required>
+                    <mat-error *ngIf="creditCardFG.get('Street').hasError('required')">Street is Required</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-4 form-group">
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>City</mat-label>
+                    <input matInput formControlName="City" required>
+                    <mat-error *ngIf="creditCardFG.get('City').hasError('required')">City is Required</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-4 form-group">
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>State</mat-label>
+                    <input matInput formControlName="State" required>
+                    <mat-error *ngIf="creditCardFG.get('State').hasError('required')">State is Required</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-4 form-group">
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Postal Code</mat-label>
+                    <input matInput formControlName="PostalCode" required>
+                    <mat-error *ngIf="creditCardFG.get('PostalCode').hasError('required')">Postal Code is Required</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-4 form-group">
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Country Code</mat-label>
+                    <input matInput formControlName="CountryCode" required>
+                    <mat-error *ngIf="creditCardFG.get('CountryCode').hasError('required')">Country Code is Required</mat-error>
+                </mat-form-field>
+            </div>
+        </form>
+    </div>
+</div>

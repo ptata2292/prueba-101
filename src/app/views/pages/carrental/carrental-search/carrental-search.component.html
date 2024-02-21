@@ -1,0 +1,208 @@
+<div *ngIf="isLoading" class="spinnerBg">
+    <mat-spinner class="spinner" [diameter]="30"></mat-spinner>
+</div>
+<div *ngIf="!isLoading"class="d-flex flex-column-fluid">
+    <!--begin::Container-->
+    <div class="container">
+        <!--begin::Dashboard-->
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-12">
+                <div class="brdSmallBlock bg-white gutter-b">
+                    <div class="brdSmallBlock_inner">
+                        <!-- <div class="searchDate"> -->
+                            <!-- <div class="searchContent">
+                                <span class="search_lbl text-dark-50 pb-2">Trip Type <i
+                                        class="fas fa-angle-down text-primary"></i></span>
+                                <div id="trip" class="search_inputField h4">One Way</div>
+                                <div class="form-group lessMtlr d-none">
+                                    <input type="text" class="form-control" placeholder="Place">
+                                </div>
+                            </div> -->
+                            <!-- <div class="searchContent d-none">
+                                <span class="search_lbl text-dark-50 pb-2">Trip Type <i
+                                    class="fas fa-angle-down text-primary"></i></span>
+                                <div (click)="clickChange('trip')" *ngIf="click.trip" id="trip" class="search_inputField h4">{{ carSearchFormGroup.value.trip | titlecase }} <span>Way</span></div>
+                                <div class="lessMtlr" *ngIf="!click.trip">
+                                  <mat-form-field class="w-100" appearance="outline">
+                                    <mat-label>Traveller</mat-label>
+                                    <mat-select #tripSelect (selectionChange)="tripSelectionChange($event.value)" [formControl]="carSearchFormGroup.get('trip')">
+                                      <mat-option *ngFor="let tripObj of tripType" [value]="tripObj">
+                                        {{ tripObj | titlecase }} {{ ' Way' }}
+                                      </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="isSubmitted && carSearchFormGroup.get('trip').hasError('required')">Please Select Trip</mat-error>
+                                  </mat-form-field>
+                                </div>
+                            </div> 
+                        </div>-->
+                        <div #fromDiv id="fromCityDiv" (click)="clickChange('from')" class="searchCity" style="width: 21%;">
+                            <div class="searchContent">
+                                <span class="search_lbl text-dark-50 pb-2">Pick-up</span>
+                                <input (click)="clickChange('from')" *ngIf="click.from" id="fromCity" type="text" class="search_inputField h4 text-truncate from" readonly="" value="{{ getCarLocationDisplayName(carSearchFormGroup.value.from) }}" title="{{ getCarLocationDisplayName(carSearchFormGroup.value.from) }}">
+                                <!-- <div class="form-group lessMtlr">
+                                  <input type="text" class="form-control" placeholder="Place">
+                                </div> -->
+                                <div class="lessMtlr" *ngIf="!click.from">
+                                  <mat-form-field appearance="outline" class="w-100">
+                                    <!-- <mat-label>Leaving From</mat-label> -->
+                                    <input #fromInput type="text" matInput [formControl]="carSearchFormGroup.get('from')" [matAutocomplete]="autoFrom"
+                                      [errorStateMatcher]="errorMatcher">
+                                    <mat-autocomplete (optionSelected)="fromChange($event)" #autoFrom="matAutocomplete" [displayWith]="displayFn">
+                                      <mat-option *ngFor="let option of filteredFromOptions | async" 
+                                          [value]="option">
+                                        {{ (option.value || option.name)}}
+                                      </mat-option>
+                                    </mat-autocomplete>
+                                  </mat-form-field>
+                                </div>
+                                <mat-error *ngIf="isSubmitted && carSearchFormGroup.get('from').hasError('required')">
+                                  Pick-up is <strong>required</strong>
+                                </mat-error>  
+                                <mat-error *ngIf="isSubmitted && carSearchFormGroup.hasError('fromSelected')">Please Select Pick-up</mat-error>                         
+                            </div>
+                        </div>
+                        <span class="swipBtn" (click)="swipBtn()">
+                            <i class="fas fa-exchange-alt text-primary"></i>
+                        </span>
+                        <div #toDiv id="toCityDiv" (click)="clickChange('to')" class="searchCity">
+                            <div class="searchContent">
+                                <span class="search_lbl text-dark-50 pb-2 to">Same as Pick-up</span>
+                                <input (click)="clickChange('to')" *ngIf="click.to" id="toCity" type="text" class="search_inputField h4 text-truncate to" readonly="" value="{{ getCarLocationDisplayName(carSearchFormGroup.value.to) }}" title="{{ getCarLocationDisplayName(carSearchFormGroup.value.to) }}">
+                                <!-- <div class="form-group lessMtlr">
+                                  <input type="text" class="form-control" placeholder="Place">
+                                </div> -->
+                                <div class="lessMtlr" *ngIf="!click.to">
+                                  <mat-form-field appearance="outline" class="w-100">
+                                    <!-- <mat-label>Going To</mat-label> -->
+                                    <input #toInput type="text" matInput [formControl]="carSearchFormGroup.get('to')" [matAutocomplete]="autoTo"
+                                      [errorStateMatcher]="errorMatcher">
+                                    <mat-autocomplete (optionSelected)="toChange($event)"  #autoTo="matAutocomplete" [displayWith]="displayFn">
+                                      <mat-option *ngFor="let option of filteredToOptions | async" 
+                                        [value]="option">
+                                        {{ (option.value || option.name) }}
+                                      </mat-option>
+                                    </mat-autocomplete>                                    
+                                  </mat-form-field>
+                                </div> 
+                                <mat-error *ngIf="isSubmitted && carSearchFormGroup.get('to').hasError('required')">
+                                  Drop-Off is <strong>required</strong>
+                                </mat-error>
+                                <mat-error *ngIf="isSubmitted && carSearchFormGroup.hasError('toSelected')">Please Select Drop-Off</mat-error>
+                                <mat-error *ngIf="isSubmitted && carSearchFormGroup.hasError('toFromMatch')">To and From are Same</mat-error>
+                            </div>
+                        </div>
+                        <div class="searchDate"(click)="clickChange('start')" >
+                            <div id="startDate" class="searchContent">
+                                <span class="search_lbl text-dark-50 pb-2 from">Pick-up Date <i
+                                    class="far fa-calendar-alt text-primary"></i></span>
+                                <div (click)="clickChange('start')" *ngIf="click.start" class="search_inputField h4">
+                                  {{ carSearchFormGroup.value.start | date: 'dd'}} {{ carSearchFormGroup.value.start | date: 'MMM'}}  {{ carSearchFormGroup.value.start | date: 'yyyy'}}
+                                </div>
+                                <!-- <div class="form-group lessMtlr">
+                                  <input type="text" class="form-control" placeholder="Place">
+                                </div> -->
+                                <div class="lessMtlr" *ngIf="!click.start">
+                                  <mat-form-field class="w-100" appearance="outline">
+                                    <!-- <mat-label>Depature</mat-label> -->
+                                    <input matInput [min]="minToDate" [max]="maxToDate" 
+                                      (click)="picker1.open()" [errorStateMatcher]="errorMatcher"
+                                      [matDatepicker]="picker1" [formControl]="carSearchFormGroup.get('start')"
+                                      (dateChange)="startDateChange('change', $event)">
+                                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker1></mat-datepicker>
+                                  </mat-form-field>
+                                </div>
+                                <mat-error *ngIf="isSubmitted && carSearchFormGroup.get('start').hasError('required')">
+                                  Pick-up Date is <strong>required</strong>
+                                </mat-error>
+                            </div>
+                        </div>
+                        <div class="searchDate" (click)="clickChange('end')">
+                            <div id="endDate" class="searchContent">
+                                <span class="search_lbl text-dark-50 pb-2">Drop-off Date <i
+                                    class="far fa-calendar-alt text-primary"></i></span>
+                                <div (click)="clickChange('end')" *ngIf="click.end" 
+                                  class="search_inputField h4">
+                                  {{ carSearchFormGroup.value.end | date: 'dd'}} {{ carSearchFormGroup.value.end | date: 'MMM'}}  {{ carSearchFormGroup.value.end | date: 'yyyy'}}
+                                </div>
+                                <!-- <div class="form-group lessMtlr">
+                                  <input type="text" class="form-control" placeholder="Place">
+                                </div> -->
+                                <div class="lessMtlr" *ngIf="!click.end">
+                                  <mat-form-field class="w-100" appearance="outline">
+                                    <!-- <mat-label>From</mat-label> -->
+                                    <input matInput [min]="minFromDate" [max]="maxFromDate" 
+                                      (click)="picker2.open()" [errorStateMatcher]="errorMatcher"
+                                      [matDatepicker]="picker2" [formControl]="carSearchFormGroup.get('end')"
+                                      (dateChange)="endDateChange('change', $event)">
+                                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker2></mat-datepicker>
+                                    <!-- <mat-error *ngIf="isSubmitted && carSearchFormGroup.hasError('startEndMatch')">Return date cannot be earlier than Depature date
+                                    </mat-error> -->
+                                  </mat-form-field>
+                                </div>
+                                <mat-error *ngIf="isSubmitted && carSearchFormGroup.get('end').hasError('required')">
+                                  Drop-off Date is <strong>required</strong>
+                                </mat-error>
+                                <mat-error *ngIf="isSubmitted && carSearchFormGroup.hasError('startEndMatch')">Drop-off Date cannot be earlier than Pick-up date
+                                </mat-error>
+                            </div>
+                        </div>
+                        <div class="searchDate">
+                            <div #pickupTimeDiv (click)="clickChange('pickupTime')" class="searchContent">
+                                <span class="search_lbl text-dark-50 pb-2">Pick-Up Time <i
+                                    class="fas fa-angle-down text-primary"></i></span>
+                                <div *ngIf="click.pickupTime" id="pickupTime" class="search_inputField h4 count">{{carSearchFormGroup.value.pickupTime}} 
+                                  <!-- <span class="pickupTime">Traveller</span> -->
+                                </div>
+                                <div class="lessMtlr" *ngIf="!click.pickupTime">
+                                  <mat-form-field class="w-100" appearance="outline">
+                                    <mat-select #pickupTimeSelect (selectionChange)="pickupTimeChange($event.value)" [formControl]="carSearchFormGroup.get('pickupTime')">
+                                      <mat-option *ngFor="let timing of timings" [value]="timing">
+                                        {{timing}}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+                                <mat-error *ngIf="isSubmitted && carSearchFormGroup.get('pickupTime').hasError('required')">Please choose a pickupTime</mat-error>
+                            </div>
+                        </div>
+                        <div class="searchDate">
+                          <div #dropoffTimeDiv (click)="clickChange('dropoffTime')" class="searchContent">
+                              <span class="search_lbl text-dark-50 pb-2">Drop-Off Time <i
+                                  class="fas fa-angle-down text-primary"></i></span>
+                              <div *ngIf="click.dropoffTime" id="dropoffTime" class="search_inputField h4 count">{{carSearchFormGroup.value.dropoffTime}} 
+                                <!-- <span class="dropoffTime">Traveller</span> -->
+                              </div>
+                              <div class="lessMtlr" *ngIf="!click.dropoffTime">
+                                <mat-form-field class="w-100" appearance="outline">
+                                  <mat-select #dropoffTimeSelect (selectionChange)="dropoffTimeChange($event.value)" [formControl]="carSearchFormGroup.get('dropoffTime')">
+                                    <mat-option *ngFor="let timing of timings" [value]="timing">
+                                      {{timing}}
+                                    </mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+                              </div>
+                              <mat-error *ngIf="isSubmitted && carSearchFormGroup.get('dropoffTime').hasError('required')">Please choose a dropoffTime</mat-error>
+                          </div>
+                      </div>
+                        <div class="bg-primary rounded-top-right rounded-bottom-right"
+                            style="width: 11%;">
+                            <button type="button" (click)="search()"
+                                class="btn btn-text-white btn-hover-text-white h3 border-0 font-weight-bold pt-6 pl-6 pb-5">
+                                Search <i class="far fa-arrow-alt-circle-right text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end::Row-->
+        <!--begin::Row-->
+        <app-carrental-list [search]="searchSubject.asObservable()"></app-carrental-list>
+        <!--end::Row-->
+        <!--end::Dashboard-->
+    </div>
+    <!--end::Container-->
+</div>

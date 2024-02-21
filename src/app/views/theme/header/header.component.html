@@ -1,0 +1,143 @@
+<div id="lr_header" class="header header-fixed border-0">
+  <!--begin::Container-->
+  <div class="container d-flex align-items-stretch justify-content-between">
+    <!--begin::Left-->
+    <div class="d-flex align-items-stretch mr-3">
+      <!--begin::Header Logo-->
+      <div class="header-logo">
+        <a routerLink="/">
+          <img alt="Logo" [src]="getLogo(true)" class="logo-default max-w-150px max-h-60px" />
+        </a>
+      </div>
+      <!--end::Header Logo-->
+      <!--begin::Header Menu Wrapper-->
+      <div class="header-menu-wrapper header-menu-wrapper-left" id="lr_header_menu_wrapper">
+        <!--begin::Header Menu-->
+        <div id="lr_header_menu" class="header-menu header-menu-left header-menu-mobile header-menu-layout-default">
+          <!--begin::Header Nav-->
+          <ul class="menu-nav">
+            <ng-container *ngFor="let model of totalModels">
+              <li *ngIf="!getObjectRouting(model).hidden && getObjectRouting(model).name === 'Hotels'" [ngClass]="linkSelected == model ? 'menu-item-open menu-item-here menu-item-open menu-item-here' : ''" data-menu-toggle="click" class="menu-item menu-item-submenu menu-item-rel" aria-haspopup="true">
+                <a routerLink="{{ '/' + getObjectRouting(model).URLLink }}" class="menu-link menu-toggle">
+                  <i [ngClass]="getObjectRouting(model).class">{{getObjectRouting(model).icon != null ? getObjectRouting(model).icon : ''}}</i>
+                  <span class="menu-text">{{getObjectRouting(model).name}}</span>
+                  <i class="menu-arrow"></i>
+                </a>
+              </li>
+              <li *ngIf="!getObjectRouting(model).hidden && getObjectRouting(model).name !== 'Hotels'" [ngClass]="linkSelected == model ? 'menu-item-open menu-item-here menu-item-open menu-item-here' : ''" data-menu-toggle="click" class="menu-item menu-item-submenu menu-item-rel" aria-haspopup="true">
+                <a class="menu-link menu-toggle">
+                  <i [ngClass]="getObjectRouting(model).class">{{getObjectRouting(model).icon != null ? getObjectRouting(model).icon : ''}}</i>
+                  <span class="menu-text">{{getObjectRouting(model).name}}</span>
+                  <i class="menu-arrow"></i>
+                </a>
+              </li>
+            </ng-container>
+          </ul>
+          <!-- <ul class="menu-nav">
+            <li [ngClass]="linkSelected == objectRouting.Flights.URLLink ? 'menu-item-open menu-item-here menu-item-open menu-item-here' : ''" (click)="selectLink(objectRouting.Flights.URLLink)" data-menu-toggle="click" class="menu-item menu-item-submenu menu-item-rel" aria-haspopup="true">
+              <a routerLink="{{ '/' + objectRouting.Flights.URLLink }}" class="menu-link menu-toggle">
+                <i class="fas fa-plane-departure pr-1 pt-1"></i>
+                <span class="menu-text">{{objectRouting.Flights.name}}</span>
+                <i class="menu-arrow"></i>
+              </a>
+            </li>
+            <li [ngClass]="linkSelected == objectRouting.Hotels.URLLink ? 'menu-item-open menu-item-here menu-item-open menu-item-here' : ''" (click)="selectLink(objectRouting.Hotels.URLLink)" data-menu-toggle="click" class="menu-item menu-item-submenu menu-item-rel" aria-haspopup="true">
+              <a routerLink="{{ '/' + objectRouting.Hotels.URLLink }}" class="menu-link menu-toggle">
+                <i class="fas fa-hotel pr-1 pt-1"></i>
+                <span class="menu-text">{{objectRouting.Hotels.name}}</span>
+                <i class="menu-arrow"></i>
+              </a>
+            </li>
+            <li [ngClass]="linkSelected == objectRouting.CarRental.URLLink ? 'menu-item-open menu-item-here menu-item-open menu-item-here' : ''" (click)="selectLink(objectRouting.CarRental.URLLink)" data-menu-toggle="click" class="menu-item menu-item-submenu menu-item-rel" aria-haspopup="true">
+              <a routerLink="{{ '/' + objectRouting.CarRental.URLLink }}" class="menu-link menu-toggle">
+                <i class="fas fa-car pr-1 pt-1 icon-lg"></i>
+                <span class="menu-text">{{objectRouting.CarRental.name}}</span>
+                <i class="menu-arrow"></i>
+              </a>
+            </li>
+            <li [ngClass]="linkSelected == objectRouting.Rail.URLLink ? 'menu-item-open menu-item-here menu-item-open menu-item-here' : ''" (click)="selectLink(objectRouting.Rail.URLLink)" data-menu-toggle="click" class="menu-item menu-item-submenu menu-item-rel" aria-haspopup="true">
+              <a routerLink="{{ '/' + objectRouting.Rail.URLLink }}" class="menu-link menu-toggle">
+                <i class="fas fa-train pr-1 pt-1 icon-lg"></i>
+                <span class="menu-text">{{objectRouting.Rail.name}}</span>
+                <i class="menu-arrow"></i>
+              </a>
+            </li>
+            <li [ngClass]="linkSelected == objectRouting.Cruise.URLLink ? 'menu-item-open menu-item-here menu-item-open menu-item-here' : ''" (click)="selectLink(objectRouting.Cruise.URLLink)" data-menu-toggle="click" class="menu-item menu-item-submenu menu-item-rel" aria-haspopup="true">
+              <a routerLink="{{ '/' + objectRouting.Cruise.URLLink }}" class="menu-link menu-toggle">
+                <i class="fas fa-ship pr-1 pt-1 icon-lg"></i>
+                <span class="menu-text">{{objectRouting.Cruise.name}}</span>
+                <i class="menu-arrow"></i>
+              </a>
+            </li>
+            <li [ngClass]="linkSelected == objectRouting.Golf.URLLink ? 'menu-item-open menu-item-here menu-item-open menu-item-here' : ''" (click)="selectLink(objectRouting.Golf.URLLink)" data-menu-toggle="click" class="menu-item menu-item-submenu menu-item-rel" aria-haspopup="true">
+              <a routerLink="{{ '/' + objectRouting.Golf.URLLink }}" class="menu-link menu-toggle">
+                <i class="material-icons pr-1 icon-xl">golf_course</i>
+                <span class="menu-text">{{objectRouting.Golf.name}}</span>
+                <i class="menu-arrow"></i>
+              </a>
+            </li>
+            <li [ngClass]="linkSelected == objectRouting.Spa.URLLink ? 'menu-item-open menu-item-here menu-item-open menu-item-here' : ''" (click)="selectLink(objectRouting.Spa.URLLink)" data-menu-toggle="click" class="menu-item menu-item-submenu menu-item-rel" aria-haspopup="true">
+              <a routerLink="{{ '/' + objectRouting.Spa.URLLink }}" class="menu-link menu-toggle">
+                <i class="fas fa-spa pr-1 pt-1 icon-lg"></i>
+                <span class="menu-text">{{objectRouting.Spa.name}}</span>
+                <i class="menu-arrow"></i>
+              </a>
+            </li>
+            <li [ngClass]="linkSelected == objectRouting.Transportation.URLLink ? 'menu-item-open menu-item-here menu-item-open menu-item-here' : ''" (click)="selectLink(objectRouting.Transportation.URLLink)" data-menu-toggle="click" class="d-none menu-item menu-item-submenu menu-item-rel" aria-haspopup="true">
+              <a routerLink="{{ '/' + objectRouting.Transportation.URLLink }}" class="menu-link menu-toggle">
+                <i class="fas fa-bus pr-1 pt-1 icon-lg"></i>
+                <span class="menu-text">{{objectRouting.Transportation.name}}</span>
+                <i class="menu-arrow"></i>
+              </a>
+            </li>
+          </ul> -->
+          <!--end::Header Nav-->
+        </div>
+        <!--end::Header Menu-->
+      </div>
+      <!--end::Header Menu Wrapper-->
+    </div>
+    <!--end::Left-->
+    <!--begin::Topbar-->
+    <div class="topbar d-flex align-items-stretch">
+      <div class="dropdown">
+        <div class="topbar-item">
+          <div class="text-dark-25 font-size-xs mr-3 text-right">Version: {{version}}<br>released {{releaseDate}}</div>
+        </div>
+      </div>
+      <!--begin::User-->
+        <div class="dropdown">
+          <!--begin::Toggle-->
+          <div class="topbar-item">
+            <div id="lr_order" title="Orders" class="btn btn-icon d-flex align-items-center btn-lg px-md-2 w-md-auto"  >
+              <div routerLink="{{ '/' + linkSelected + '/Orders' }}" class="btn btn-icon btn-hover-transparent-white btn-dropdown btn-lg mr-1">
+                <i class="far fa-clipboard opacity-80"></i>
+              </div>
+            </div>
+          </div>
+          <!--end::Toggle-->
+        </div>
+        <div class="dropdown">
+          <div class="topbar-item">
+            <button class="btn btn-icon d-flex align-items-center btn-lg px-md-2 w-md-auto" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+              <span class="symbol symbol-40">
+                <span class="symbol-label text-white font-size-h5 font-weight-bold bg-white-o-30">S</span>
+              </span>
+            </button>
+            <mat-menu #menu="matMenu" class="min-w-200px">
+              <button mat-menu-item id="lr_quick_user_toggle" (click)="Logout()">
+                <mat-icon>exit_to_app</mat-icon>
+                <span>Logout</span>
+              </button>
+            </mat-menu>
+          </div>
+        </div>
+      <!--end::User-->
+    </div>
+    <!--end::Topbar-->
+  </div>
+  <!--end::Container-->
+  
+
+</div>
+

@@ -1,0 +1,394 @@
+<div *ngIf="isLoading">
+    <mat-spinner class="spinner" [diameter]="30"></mat-spinner>
+</div>
+<!--begin::Entry-->
+<div *ngIf="!isLoading && selectedCar != null" class="d-flex flex-column-fluid">
+    <!--begin::Container-->
+    <div class="container">
+        <!--begin::Dashboard-->
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-12">
+                <div class="brdSmallBlock gutter-b">
+                    <div class="brdSmallBlock_inner pt-4 flex-column">
+                        <h2 class="text-white pl-2 opacity-70">Booking Details</h2>
+                        <h6 class="text-white-50 pl-2">Review Fare and provide booking details</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end::Row-->
+        <!--begin::Row-->
+        <div class="row gutter-b">
+            <div class="col-9">
+                <!--begin::Details-->
+                <div class="card card-custom mb-3">
+                    <div class="card-body p-0">
+                        <div class="d-flex">
+                            <div class="htlImgBlock d-flex align-items-center justify-content-center">
+                                <img *ngIf="selectedCar.product.category.imageUrl!=''" class="w-100" [src]="selectedCar.product.category.imageUrl" onerror="this.src='assets/media/Carrentals/noImageAvis.svg'" style="height: auto;">
+                                <i *ngIf="selectedCar.product.category.imageUrl===''" class="fas fa-car icon-6x opacity-50"></i>
+                            </div>
+                            <div class="d-flex flex-lg-fill border-right">
+                                <div class="d-flex flex-column flex-wrap p-5 w-100">
+                                    <h3 class="mb-1">{{selectedCar.product.category.vehicleType}}</h3>
+                                    <div class="text-muted font-size-lg font-weight-bold">{{selectedCar.product.category.name}}</div>
+                                    <div class="d-inline-block pt-4">
+                                        <div class="btn btn-icon btn-outline-secondary btn-circle btn-xs mr-2">
+                                            <i class="fas fa-map-marker-alt opacity-50"></i>
+                                        </div>
+                                        <span class="font-size-h6">
+                                            <span class="font-weight-bold">{{selectedCar.facilityIdentifier.name}}</span>,
+                                            {{selectedCar.facilityIdentifier.location.address.addressLine[0]}}, {{selectedCar.facilityIdentifier.location.address.city}}, {{selectedCar.facilityIdentifier.location.address.stateProv.value}}, {{selectedCar.facilityIdentifier.location.address.country.value}}, {{selectedCar.facilityIdentifier.location.address.postalCode}}
+                                        </span>
+                                    </div>
+                                    <div class="d-flex flex-wrap">
+                                        <div class="d-inline-block mt-3 mr-5">
+                                            <div class="btn btn-icon btn-outline-success btn-circle btn-xs mr-1" *ngIf="selectedCar.product.features.smokeFree">
+                                                <i class="material-icons">done</i>
+                                            </div>
+                                            <div class="btn btn-icon btn-outline-danger btn-circle btn-xs mr-1" *ngIf="!selectedCar.product.features.smokeFree">
+                                                <i class="material-icons">clear</i>
+                                            </div>
+                                            <span>Smoke Free</span>
+                                        </div>
+                                        <div class="d-inline-block mt-3 mr-5">
+                                            <div class="btn btn-icon btn-outline-success btn-circle btn-xs mr-1" *ngIf="selectedCar.product.features.airConditioned">
+                                                <i class="material-icons">done</i>
+                                            </div>
+                                            <div class="btn btn-icon btn-outline-danger btn-circle btn-xs mr-1" *ngIf="!selectedCar.product.features.airConditioned">
+                                                <i class="material-icons">clear</i>
+                                            </div>
+                                            <span>Air Conditioning</span>
+                                        </div>
+                                        <div class="d-inline-block mt-3 mr-5">
+                                            <div class="btn btn-icon btn-outline-success btn-circle btn-xs mr-1" *ngIf="selectedCar.product.features.connectedCar">
+                                                <i class="material-icons">done</i>
+                                            </div>
+                                            <div class="btn btn-icon btn-outline-danger btn-circle btn-xs mr-1" *ngIf="!selectedCar.product.features.connectedCar">
+                                                <i class="material-icons">clear</i>
+                                            </div>
+                                            <span>connectedCar</span>
+                                        </div>
+                                        <div class="d-inline-block mt-3 mr-5">
+                                            <div class="btn btn-icon btn-outline-success btn-circle btn-xs mr-1" *ngIf="selectedCar.product.features.bluetoothEquipped">
+                                                <i class="material-icons">done</i>
+                                            </div>
+                                            <div class="btn btn-icon btn-outline-danger btn-circle btn-xs mr-1" *ngIf="!selectedCar.product.features.bluetoothEquipped">
+                                                <i class="material-icons">clear</i>
+                                            </div>
+                                            <span>Bluetooth</span>
+                                        </div>
+                                    </div>
+                                    <div class="d-none justify-content-between">
+                                        <div class="w-auto pr-2 pt-3">
+                                            <span class="label label-light-info label-inline font-weight-bold p-4">4.0/5 Very Good</span>
+                                            <span class="font-size-base text-muted mr-1">15 Reviews</span>
+                                        </div>
+                                        <a class="btn btn-outline-dark btn-sm font-weight-bold font-size-h6 opacity-60"> Show All Rooms
+                                            <i class="fas fa-chevron-down icon-1x"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="separator separator-dashed"></div>
+                    <!--begin::Items-->
+                    <div class="d-flex align-items-center flex-wrap p-5">
+                        <!--begin: Item-->
+                        <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
+                            <span class="mr-4 d-none">
+                                <i class="fas fa-phone-alt icon-lg opacity-40"></i>
+                            </span>
+                            <div class="d-flex flex-column flex-lg-fill">
+                                <span class="font-weight-bolder font-size-sm text-dark-50">Contact No.</span>
+                                <span class="font-weight-bold font-size-h5">{{formatPhoneNumber(selectedCar.facilityIdentifier.telephone[0].phoneNumber)}}</span>
+                            </div>
+                        </div>
+                        <!--end: Item-->
+                        <!--begin: Item-->
+                        <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
+                            <span class="mr-4 d-none">
+                                <i class="fas fa-car-alt icon-lg opacity-40"></i>
+                            </span>
+                            <div class="d-flex flex-column text-dark-75">
+                                <span class="font-weight-bolder font-size-sm text-dark-50">Transmission</span>
+                                <span class="font-weight-bold font-size-h5">
+                                    {{selectedCar.product.category.vehicleTransmission}}
+                                </span>
+                            </div>
+                        </div>
+                        <!--end: Item-->
+                        <!--begin: Item-->
+                        <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
+                            <span class="mr-4 d-none">
+                                <i class="fas fa-gas-pump icon-lg opacity-40"></i>
+                            </span>
+                            <div class="d-flex flex-column text-dark-75">
+                                <span class="font-weight-bolder font-size-sm text-dark-50">Mileage</span>
+                                <span class="font-weight-bold font-size-h5" *ngIf="selectedCar.product.category.mpg">
+                                    {{selectedCar.product.category.mpg}}
+                                </span>
+                                <span class="font-weight-bold font-size-h5" *ngIf="!selectedCar.product.category.mpg">
+                                    -
+                                </span>
+                            </div>
+                        </div>
+                        <!--end: Item-->
+                        <!--begin: Item-->
+                        <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
+                            <span class="mr-4 d-none">
+                                <i class="fas fa-door-open icon-lg opacity-40"></i>
+                            </span>
+                            <div class="d-flex flex-column text-dark-75">
+                                <span class="font-weight-bolder font-size-sm text-dark-50">Doors</span>
+                                <span class="font-weight-bold font-size-h5">
+                                    {{selectedCar.product.capacity.doors}}
+                                </span>
+                            </div>
+                        </div>
+                        <!--end: Item-->
+                        <!--begin: Item-->
+                        <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
+                            <span class="mr-4 d-none">
+                                <i class="fas fa-chair icon-lg opacity-40"></i>
+                            </span>
+                            <div class="d-flex flex-column text-dark-75">
+                                <span class="font-weight-bolder font-size-sm text-dark-50">Seats</span>
+                                <span class="font-weight-bold font-size-h5">
+                                    {{selectedCar.product.capacity.seats}}
+                                </span>
+                            </div>
+                        </div>
+                        <!--end: Item-->
+                        <!--begin: Item-->
+                        <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
+                            <span class="mr-4 d-none">
+                                <i class="fas fa-suitcase-rolling icon-lg opacity-40"></i>
+                            </span>
+                            <div class="d-flex flex-column text-dark-75">
+                                <span class="font-weight-bolder font-size-sm text-dark-50">Luggage Capacity</span>
+                                <span class="font-weight-bold font-size-h5">
+                                    {{selectedCar.product.capacity.luggageCapacity}}
+                                </span>
+                            </div>
+                        </div>
+                        <!--end: Item-->
+                    </div>
+                </div>
+                <!--end::Details-->
+                <!-- Start::Passenger -->
+                <form [formGroup]="passengerFG">
+                    <div>
+                        <div class="card card-custom mb-3">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <h3 class="card-label">Passenger Details</h3>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-4 form-group">
+                                        <mat-form-field class="w-100" appearance="outline">
+                                            <mat-label>First Name</mat-label>
+                                            <input matInput formControlName="GivenName" placeholder="Enter First Name" required>
+                                            <mat-error *ngIf="passengerFG.get('GivenName').hasError('required')">First Name is Required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-4 form-group">
+                                        <mat-form-field class="w-100" appearance="outline">
+                                            <mat-label>Last Name</mat-label>
+                                            <input matInput formControlName="Surname" placeholder="Enter Last Name" required>
+                                            <mat-error *ngIf="passengerFG.get('Surname').hasError('required')">Last Name is Required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-4 form-group">
+                                        <mat-form-field class="w-100" appearance="outline">
+                                            <mat-label>Email</mat-label>
+                                            <input matInput formControlName="Email" placeholder="Enter Email" required>
+                                            <mat-error *ngIf="passengerFG.get('Email').hasError('required')">Email is Required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-4 form-group">
+                                        <mat-form-field class="w-100" appearance="outline">
+                                            <mat-label>Address</mat-label>
+                                            <input matInput formControlName="Address" placeholder="Enter Address" required>
+                                            <mat-error *ngIf="passengerFG.get('Address').hasError('required')">Address is Required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-4 form-group">
+                                        <mat-form-field class="w-100" appearance="outline">
+                                            <mat-label>City</mat-label>
+                                            <input matInput formControlName="City" placeholder="Enter City" required>
+                                            <mat-error *ngIf="passengerFG.get('City').hasError('required')">City is Required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-4 form-group">
+                                        <mat-form-field class="w-100" appearance="outline">
+                                            <mat-label>State</mat-label>
+                                            <input matInput formControlName="State" placeholder="Enter State" required>
+                                            <mat-error *ngIf="passengerFG.get('State').hasError('required')">State is Required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-4 form-group">
+                                        <mat-form-field class="w-100" appearance="outline">
+                                            <mat-label>Zip</mat-label>
+                                            <input matInput formControlName="Zip" placeholder="Enter Zip" required>
+                                            <mat-error *ngIf="passengerFG.get('Zip').hasError('required')">Zip Code is Required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-4 form-group">
+                                        <mat-form-field class="w-100" appearance="outline">
+                                            <mat-label>Country</mat-label>
+                                            <input matInput formControlName="Country" placeholder="Enter Country" required>
+                                            <mat-error *ngIf="passengerFG.get('Country').hasError('required')">Country is Required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-4 form-group">
+                                        <mat-form-field class="w-100" appearance="outline">
+                                            <mat-label>Phone</mat-label>
+                                            <input matInput formControlName="Phone" placeholder="Enter Phone Number" maxlength="13"  required>
+                                            <mat-error *ngIf="passengerFG.get('Phone').hasError('required')">Phone Number is Required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer p-3 text-right">
+                                <button type="button" (click)="carReservation()" class="btn btn-primary font-weight-bold mr-2">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <!-- end::Passenger -->
+                <!-- Start::Payment -->
+                <form [formGroup]="creditCardFG" *ngIf="carReservationDone">
+                    <div>
+                        <div class="card card-custom mt-3">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <h3 class="card-label">Payment Information</h3>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mt-2">
+                                    <div class="col-6 form-group">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Credit Card Type</mat-label>
+                                            <mat-select formControlName="CreditType" required>
+                                            <mat-option *ngFor="let c of cardTypes" [value]="c.code">
+                                                {{c.name}}
+                                            </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="creditCardFG.get('CreditType').hasError('required')">Please choose Credit Card Type</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-6"></div>
+                                    <div class="col-6 form-group">
+                                        <mat-form-field class="w-100" appearance="outline">
+                                            <mat-label>Name on Card</mat-label>
+                                            <input matInput formControlName="NameonCard" placeholder="Enter Name Credit Card" required>
+                                            <mat-error *ngIf="creditCardFG.get('NameonCard').hasError('required')">Name on Card is Required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-6"></div>
+                                    <div class="col-6 form-group">
+                                        <mat-form-field class="w-100" appearance="outline">
+                                            <mat-label>Credit Card Number</mat-label>
+                                            <input matInput appCreditCard autocomplete="off" formControlName="CreditCardNumber" placeholder="Enter Credit Card Number" required>
+                                            <mat-error *ngIf="creditCardFG.get('CreditCardNumber').hasError('required')">Credit Card Number is Required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-2 form-group">
+                                        <mat-form-field class="w-100" appearance="outline">
+                                            <mat-label>Security Code</mat-label>
+                                            <input matInput appOnlyNumber formControlName="SecurityCode"  maxlength="3" placeholder="Enter Security Code" required>
+                                            <mat-error *ngIf="creditCardFG.get('SecurityCode').hasError('required')">Security Code is Required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-2 form-group">
+                                        <mat-form-field class="w-100" appearance="outline">
+                                            <mat-label>Exp Month</mat-label>
+                                            <mat-select formControlName="ExpMonth" required>
+                                            <mat-option *ngFor="let m of monthArray" [disabled]="isMonthDisable(m)" [value]="m">
+                                                {{m}}
+                                            </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="creditCardFG.get('ExpMonth').hasError('required')">Please choose a Month</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-2 form-group">
+                                        <mat-form-field appearance="outline" class="w-100">
+                                            <mat-label>Exp Year</mat-label>
+                                            <mat-select (selectionChange)="yearChange($event.value)" formControlName="ExpYear" required>
+                                            <mat-option *ngFor="let y of yearArray" [value]="y">
+                                                {{y}}
+                                            </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="creditCardFG.get('ExpYear').hasError('required')">Please choose a Year</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-6"></div>
+                                    <div class="col-12 form-group">
+                                        <div class="checkbox-list">
+                                            <label class="checkbox">
+                                                <input type="checkbox" formControlName="termsAndConditions" name="Checkboxes1" required/>
+                                                <span></span>
+                                                By checking this box I hereby agree to the terms and conditions set forth.
+                                            </label>
+                                            <mat-error *ngIf="creditCardFG.get('termsAndConditions').hasError('required') && creditCardFG.get('termsAndConditions').dirty">Please agree with terms and conditions</mat-error>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <!-- end::Payment -->
+                <!-- Start::Buttons -->
+                <div *ngIf="carReservationDone" class="row mt-4 align-items-end">
+                    <div class="col-12 ml-lg-auto text-right">
+                        <button type="button" (click)="cancel()" class="btn btn-secondary btn-lg">Cancel</button>
+                        <button type="submit" (click)="carPayment()" class="btn btn-primary btn-lg font-weight-bold ml-2">Book Car</button>
+                    </div>
+                </div>
+                <!-- End::Buttons -->
+            </div>
+            <!--Start::Price-->
+            <div class="col-3 pl-0">
+                <div class="card card-custom">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h3 class="card-label">Fare Summary</h3>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="d-flex pt-3 justify-content-around">
+                            <div class="col-8 font-size-lg text-left pl-6">Total Car Charges</div>
+                            <div class="col-4 font-size-lg font-weight-bold text-right">${{ totalCarCharges | number : '1.2-2' }}</div>
+                        </div>
+                        <div class="separator separator-dashed pt-3 mb-3"></div>
+                        <div class="d-flex justify-content-around">
+                            <div class="col-8 font-size-lg text-left pl-6">Total Taxes</div>
+                            <div class="col-4 font-size-lg font-weight-bold text-right">${{ totalTaxes | number : '1.2-2' }}</div>
+                        </div>
+                        <div class="separator separator-dashed pt-3 mb-3"></div>
+                        <div class="d-flex pb-3 justify-content-around">
+                            <div class="col-8 font-size-lg text-left pl-6">Total Fees</div>
+                            <div class="col-4 font-size-lg font-weight-bold text-right">${{ totalFees | number : '1.2-2' }}</div>
+                        </div>
+                        <div class="d-flex border-top border-2 pt-2 pb-2 justify-content-around">
+                            <div class="col-7 text-left font-size-h4 pl-6">Total Amount</div>
+                            <div class="col-5 text-right font-weight-bold font-size-h3">${{ totalAmount | number : '1.2-2' }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End::Price-->
+        </div>
+        <!--end::Row-->
+        <!--end::Dashboard-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::Entry-->

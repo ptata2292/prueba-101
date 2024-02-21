@@ -1,0 +1,186 @@
+<div *ngIf="isLoading">
+    <mat-spinner class="spinner" [diameter]="30"></mat-spinner>
+</div>
+<!--begin:: ONE Row-->
+<div *ngIf="!isLoading && errorMessage==''" class="row gutter-b m-0 mt-5">
+    <div class="col-2 pr-0">
+        <h3 class="text-black-50">Filter by</h3>
+    </div>
+    <div class="col-10 pr-0">
+        <!--begin::Card-->
+        <div class="card card-custom mb-3" *ngFor="let car of carList">
+            <div class="card-body p-0">
+                <div class="d-flex">
+                    <div class="htlImgBlock d-flex align-items-center justify-content-center">
+                        <img *ngIf="car.product.category.imageUrl!=''" class="w-100" [src]="car.product.category.imageUrl" onerror="this.src='assets/media/Carrentals/noImageAvis.svg'" style="min-height: auto;">
+                        <i *ngIf="car.product.category.imageUrl===''" class="fas fa-car icon-6x opacity-50"></i>
+                    </div>
+                    <div class="d-flex flex-lg-fill border-right">
+                        <div class="d-flex flex-column flex-wrap p-5 w-100">
+                            <h3 class="mb-1">{{car.product.category.vehicleType}}</h3>
+                            <div class="text-muted font-size-lg font-weight-bold">{{car.product.category.name}}</div>
+                            <div class="d-inline-block pt-4">
+                                <div class="btn btn-icon btn-outline-secondary btn-circle btn-xs mr-2">
+                                    <i class="fas fa-map-marker-alt opacity-50"></i>
+                                </div>
+                                <span class="font-size-h6">
+                                    <span class="font-weight-bold">{{car.facilityIdentifier.name}}</span>,
+                                    {{car.facilityIdentifier.location.address.addressLine[0]}}, {{car.facilityIdentifier.location.address.city}}, {{car.facilityIdentifier.location.address.stateProv.value}}, {{car.facilityIdentifier.location.address.country.value}}, {{car.facilityIdentifier.location.address.postalCode}}
+                                </span>
+                            </div>
+                            <div class="d-flex flex-wrap">
+                                <div class="d-inline-block mt-3 mr-5">
+                                    <div class="btn btn-icon btn-outline-success btn-circle btn-xs mr-1" *ngIf="car.product.features.smokeFree">
+                                        <i class="material-icons">done</i>
+                                    </div>
+                                    <div class="btn btn-icon btn-outline-danger btn-circle btn-xs mr-1" *ngIf="!car.product.features.smokeFree">
+                                        <i class="material-icons">clear</i>
+                                    </div>
+                                    <span>Smoke Free</span>
+                                </div>
+                                <div class="d-inline-block mt-3 mr-5">
+                                    <div class="btn btn-icon btn-outline-success btn-circle btn-xs mr-1" *ngIf="car.product.features.airConditioned">
+                                        <i class="material-icons">done</i>
+                                    </div>
+                                    <div class="btn btn-icon btn-outline-danger btn-circle btn-xs mr-1" *ngIf="!car.product.features.airConditioned">
+                                        <i class="material-icons">clear</i>
+                                    </div>
+                                    <span>Air Conditioning</span>
+                                </div>
+                                <div class="d-inline-block mt-3 mr-5">
+                                    <div class="btn btn-icon btn-outline-success btn-circle btn-xs mr-1" *ngIf="car.product.features.connectedCar">
+                                        <i class="material-icons">done</i>
+                                    </div>
+                                    <div class="btn btn-icon btn-outline-danger btn-circle btn-xs mr-1" *ngIf="!car.product.features.connectedCar">
+                                        <i class="material-icons">clear</i>
+                                    </div>
+                                    <span>connectedCar</span>
+                                </div>
+                                <div class="d-inline-block mt-3 mr-5">
+                                    <div class="btn btn-icon btn-outline-success btn-circle btn-xs mr-1" *ngIf="car.product.features.bluetoothEquipped">
+                                        <i class="material-icons">done</i>
+                                    </div>
+                                    <div class="btn btn-icon btn-outline-danger btn-circle btn-xs mr-1" *ngIf="!car.product.features.bluetoothEquipped">
+                                        <i class="material-icons">clear</i>
+                                    </div>
+                                    <span>Bluetooth</span>
+                                </div>
+                            </div>
+                            <div class="d-none justify-content-between">
+                                <div class="w-auto pr-2 pt-3">
+                                    <span class="label label-light-info label-inline font-weight-bold p-4">4.0/5 Very Good</span>
+                                    <span class="font-size-base text-muted mr-1">15 Reviews</span>
+                                </div>
+                                <a class="btn btn-outline-dark btn-sm font-weight-bold font-size-h6 opacity-60"> Show All Rooms
+                                    <i class="fas fa-chevron-down icon-1x"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="htlPriceBlock justify-content-between text-center align-items-center pt-5 pb-5">
+                        <div>
+                            <span class="text-muted">Total Price</span>
+                            <h1 class="mr-4 mb-0">${{car.totalPrice.total.value}}</h1>
+                            <span class="font-size-xs">includes all taxes</span>
+                        </div>
+                        <a  (click)="bookNow(car)" class="btn btn-primary btn-sm font-weight-bold font-size-h5 w-75">
+                            Book Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="separator separator-dashed"></div>
+            <!--begin::Items-->
+            <div class="d-flex align-items-center flex-wrap p-5">
+                <!--begin: Item-->
+                <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
+                    <span class="mr-4 d-none">
+                        <i class="fas fa-phone-alt icon-lg opacity-40"></i>
+                    </span>
+                    <div class="d-flex flex-column flex-lg-fill">
+                        <span class="font-weight-bolder font-size-sm text-dark-50">Contact No.</span>
+                        <span class="font-weight-bold font-size-h5">{{formatPhoneNumber(car.facilityIdentifier.telephone[0].phoneNumber)}}</span>
+                    </div>
+                </div>
+                <!--end: Item-->
+                <!--begin: Item-->
+                <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
+                    <span class="mr-4 d-none">
+                        <i class="fas fa-car-alt icon-lg opacity-40"></i>
+                    </span>
+                    <div class="d-flex flex-column text-dark-75">
+                        <span class="font-weight-bolder font-size-sm text-dark-50">Transmission</span>
+                        <span class="font-weight-bold font-size-h5">
+                            {{car.product.category.vehicleTransmission}}
+                        </span>
+                    </div>
+                </div>
+                <!--end: Item-->
+                <!--begin: Item-->
+                <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
+                    <span class="mr-4 d-none">
+                        <i class="fas fa-gas-pump icon-lg opacity-40"></i>
+                    </span>
+                    <div class="d-flex flex-column text-dark-75">
+                        <span class="font-weight-bolder font-size-sm text-dark-50">Mileage</span>
+                        <span class="font-weight-bold font-size-h5" *ngIf="car.product.category.mpg">
+                            {{car.product.category.mpg}}
+                        </span>
+                        <span class="font-weight-bold font-size-h5" *ngIf="!car.product.category.mpg">
+                            -
+                        </span>
+                    </div>
+                </div>
+                <!--end: Item-->
+                <!--begin: Item-->
+                <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
+                    <span class="mr-4 d-none">
+                        <i class="fas fa-door-open icon-lg opacity-40"></i>
+                    </span>
+                    <div class="d-flex flex-column text-dark-75">
+                        <span class="font-weight-bolder font-size-sm text-dark-50">Doors</span>
+                        <span class="font-weight-bold font-size-h5">
+                            {{car.product.capacity.doors}}
+                        </span>
+                    </div>
+                </div>
+                <!--end: Item-->
+                <!--begin: Item-->
+                <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
+                    <span class="mr-4 d-none">
+                        <i class="fas fa-chair icon-lg opacity-40"></i>
+                    </span>
+                    <div class="d-flex flex-column text-dark-75">
+                        <span class="font-weight-bolder font-size-sm text-dark-50">Seats</span>
+                        <span class="font-weight-bold font-size-h5">
+                            {{car.product.capacity.seats}}
+                        </span>
+                    </div>
+                </div>
+                <!--end: Item-->
+                <!--begin: Item-->
+                <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
+                    <span class="mr-4 d-none">
+                        <i class="fas fa-suitcase-rolling icon-lg opacity-40"></i>
+                    </span>
+                    <div class="d-flex flex-column text-dark-75">
+                        <span class="font-weight-bolder font-size-sm text-dark-50">Luggage Capacity</span>
+                        <span class="font-weight-bold font-size-h5">
+                            {{car.product.capacity.luggageCapacity}}
+                        </span>
+                    </div>
+                </div>
+                <!--end: Item-->
+            </div>
+        </div>
+        <!--end::Card-->
+    </div>
+</div>
+<!--end:: ONE Row-->
+
+<div *ngIf="!isLoading && errorMessage !=''" class="alert alert-custom alert-outline-info fade show text-center mt-20 mb-5 border-0" role="alert">
+    <div class="alert-text h2">
+        <i class="fas fa-bed icon-2x text-info pr-2"></i>
+        {{errorMessage}}
+    </div>
+</div>

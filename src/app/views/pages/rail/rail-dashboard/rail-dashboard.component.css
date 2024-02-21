@@ -1,0 +1,58 @@
+  .product {
+    display: flex;
+    max-height: none;
+    max-width: none;
+    min-height: 450px;
+    padding: 30px;
+    border-radius: 20px;
+    background-color: #000;
+    text-align: center;
+  }
+  .product.green {
+    min-height: 450px;
+    background-image: url("/assets/media/green-arrows.svg");
+    background-color: #58bd89; 
+    background-position: 0px 140px;
+    background-size: 870px;
+    background-repeat: no-repeat;
+  }
+  .product.blue{
+    min-height: 450px;
+    display: flex;
+    background-color: #2196f3;
+    background-image: url("/assets/media/white-lines.svg");
+    background-position: -290px -670px;
+    background-size: auto;
+    background-repeat: no-repeat;
+  }
+  .product-text {
+    display: flex;
+    max-width: 500px;
+    margin-right: auto;
+    margin-left: auto;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    flex: 1;
+  }
+  .heading-30 {
+    margin-bottom: 20px;
+    color: #fff;
+    font-size: 30px;
+    line-height: 36px;
+  }
+  .para-20 {
+      color: #fff;
+      font-size: 18px;
+      line-height: 26px;
+      font-weight: 300;
+  }
+  .card.card-custom.card-stretch.gutter-b {
+    height: calc(100% - 75px);
+  }

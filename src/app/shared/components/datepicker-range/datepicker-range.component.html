@@ -1,0 +1,130 @@
+<div id="dFlex" (click)="clickChange('start')" *ngIf="click.start && click.end" class="d-flex">
+    <div id="startDate" (click)="clickChange('start')" class="searchContent w-50">
+        <span id="startLabel" class="search_lbl text-dark-50 pb-2 from">{{name[0]}}
+            <i class="far fa-calendar-alt text-primary"></i></span>
+        <div id="startValue" (click)="clickChange('start')" *ngIf="click.start && !isSearchPage" class="search_inputField h1">
+            {{ searchFormGroup.value.start | date: 'dd'}}
+            <span id="startValue" class="search_inputField display6">{{ searchFormGroup.value.start | date: 'MMM'}}
+                {{ searchFormGroup.value.start | date: 'yyyy'}} </span>
+        </div>
+        <div id="startValue" (click)="clickChange('start')" *ngIf="click.start && isSearchPage" class="search_inputField h4">
+            {{ searchFormGroup.value.start | date: 'dd'}} {{ searchFormGroup.value.start | date: 'MMM'}}
+            {{ searchFormGroup.value.start | date: 'yyyy'}}
+        </div>
+        <div id="startDateInput" class="lessMlr-1" *ngIf="!click.start">
+            <div class="form-group hidden">
+                <div class="input-group">
+                    <input name="datepicker" class="form-control position-absolute" ngbDatepicker
+                        #datepicker="ngbDatepicker" [autoClose]="'outside'" container="'body'"
+                        (dateSelect)="onDateSelection($event, datepicker)" [displayMonths]="2" [dayTemplate]="t"
+                        [minDate]="minDate" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1" readonly />
+                    <ng-template #t let-date let-focused="focused">
+                        <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                            [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                            (mouseleave)="hoveredDate = null">
+                            {{ date.day }}
+                        </span>
+                    </ng-template>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <input #dpFromDate class="form-control" placeholder="yyyy-mm-dd" name="dpFromDate"
+                        [value]="formatter.format(fromDate)"
+                        (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
+                </div>
+            </div>
+        </div>
+        <mat-error *ngIf="isSubmitted && searchFormGroup.get('start').hasError('required')">
+            {{name[0]}} is <strong>required</strong>
+        </mat-error>
+    </div>
+    <div (click)="clickChange('end')" id="endDate" class="searchContent w-50">
+        <span id="endLabel" class="search_lbl text-dark-50 pb-2">{{name[1]}}
+            <i class="far fa-calendar-alt text-primary"></i></span>
+        <div id="endValue" (click)="clickChange('end')" *ngIf="click.end && !isSearchPage" class="search_inputField h1">
+            {{ searchFormGroup.value.end | date: 'dd'}}
+            <span id="endValue" class="search_inputField display6">{{ searchFormGroup.value.end | date: 'MMM'}}
+                {{ searchFormGroup.value.end | date: 'yyyy'}} </span>
+        </div>
+        <div id="endValue" (click)="clickChange('end')" *ngIf="click.end && isSearchPage" class="search_inputField h4">
+            {{ searchFormGroup.value.end | date: 'dd'}} {{ searchFormGroup.value.end | date: 'MMM'}}
+            {{ searchFormGroup.value.end | date: 'yyyy'}}
+        </div>
+        <div id="endDateInput" class="lessMlr-1" *ngIf="!click.end">
+            <!-- <mat-label>From</mat-label> -->
+            <input #dpToDate class="form-control" placeholder="yyyy-mm-dd" name="dpToDate"
+                [value]="formatter.format(toDate)" (input)="toDate = validateInput(toDate, dpToDate.value)">
+        </div>
+        <mat-error *ngIf="isSubmitted && searchFormGroup.get('end').hasError('required')">
+            {{name[1]}} is <strong>required</strong>
+        </mat-error>
+    </div>
+</div>
+
+<div id="dFlex" (click)="clickChange('start', false)" *ngIf="!click.start && !click.end" class="d-flex">
+    <div (click)="clickChange('start', false)" id="startDate" class="searchContent w-50">
+        <span id="startLabel" class="search_lbl text-dark-50 pb-2 from">{{name[0]}}
+            <i class="far fa-calendar-alt text-primary"></i>
+        </span>
+        <div id="startValue" (click)="clickChange('start', false)" *ngIf="click.start && !isSearchPage" class="search_inputField h1">
+            {{ searchFormGroup.value.start | date: 'dd'}}
+            <span id="startValue" class="search_inputField display6">{{ searchFormGroup.value.start | date: 'MMM'}}
+                {{ searchFormGroup.value.start | date: 'yyyy'}} </span>
+        </div>
+        <div id="startValue" (click)="clickChange('start', false)" *ngIf="click.start && isSearchPage" class="search_inputField h4">
+            {{ searchFormGroup.value.start | date: 'dd'}} {{ searchFormGroup.value.start | date: 'MMM'}}
+            {{ searchFormGroup.value.start | date: 'yyyy'}}
+        </div>
+        <div id="startDateInput" class="lessMlr-1" *ngIf="!click.start">
+            <div class="form-group hidden">
+                <div class="input-group">
+                    <input name="datepicker" class="form-control position-absolute" ngbDatepicker
+                        #datepicker="ngbDatepicker" [autoClose]="'outside'" container="'body'"
+                        (dateSelect)="onDateSelection($event, datepicker)" [displayMonths]="2" [dayTemplate]="t"
+                        [minDate]="minDate" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1" readonly />
+                    <ng-template #t let-date let-focused="focused">
+                        <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                            [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                            (mouseleave)="hoveredDate = null">
+                            {{ date.day }}
+                        </span>
+                    </ng-template>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <input #dpFromDate class="form-control" placeholder="yyyy-mm-dd" name="dpFromDate"
+                        [value]="formatter.format(fromDate)"
+                        (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
+                </div>
+            </div>
+        </div>
+        <mat-error *ngIf="isSubmitted && searchFormGroup.get('start').hasError('required')">
+            {{name[0]}} is <strong>required</strong>
+        </mat-error>
+    </div>
+    <div (click)="clickChange('end', false)" id="endDate" class="searchContent w-50">
+        <span id="endLabel" class="search_lbl text-dark-50 pb-2">{{name[1]}}
+            <i class="far fa-calendar-alt text-primary"></i></span>
+        <div id="endValue" (click)="clickChange('end', false)" *ngIf="click.end && !isSearchPage" class="search_inputField h1">
+            {{ searchFormGroup.value.end | date: 'dd'}}
+            <span class="search_inputField display6">{{ searchFormGroup.value.end | date: 'MMM'}}
+                {{ searchFormGroup.value.end | date: 'yyyy'}} </span>
+        </div>
+        <div id="endValue" (click)="clickChange('end', false)" *ngIf="click.end && isSearchPage" class="search_inputField h4">
+            {{ searchFormGroup.value.end | date: 'dd'}} {{ searchFormGroup.value.end | date: 'MMM'}}
+            {{ searchFormGroup.value.end | date: 'yyyy'}}
+        </div>
+        <div id="endDateInput" class="lessMlr-1" *ngIf="!click.end">
+            <!-- <mat-label>From</mat-label> -->
+            <input #dpToDate class="form-control" placeholder="yyyy-mm-dd" name="dpToDate"
+                [value]="formatter.format(toDate)" (input)="toDate = validateInput(toDate, dpToDate.value)">
+            <!-- <mat-error *ngIf="isSubmitted && searchFormGroup.hasError('startEndMatch')">Return date cannot be earlier than Depature date
+            </mat-error> -->
+        </div>
+        <mat-error *ngIf="isSubmitted && searchFormGroup.get('end').hasError('required')">
+            {{name[1]}} is <strong>required</strong>
+        </mat-error>
+    </div>
+</div>

@@ -1,0 +1,60 @@
+<ng-container [ngSwitch]="viewType">
+    <div *ngSwitchCase="FlightFarePriceInfoViewType.Popup"
+        #popoverRef="ngbPopover"
+         class="toggle-container icon-popup"
+         triggers="manual"
+         [ngbPopover]="flightRuleTemplate"
+         [popoverTitle]="flightFareTitle"
+         (click)="toggleInfoPopup($event, popoverRef)">
+         <span *ngIf="flightRules && flightRules.length">
+            <span class="fas fa-calendar-day" [class.text-success]="flightRules[0].allowChange" [class.text-danger]="!flightRules[0].allowChange"></span>&nbsp;
+            <span class="fas fa-plane-slash" [class.text-success]="flightRules[0].allowCancel" [class.text-danger]="!flightRules[0].allowCancel"></span>&nbsp;
+         </span>
+    </div>
+    <div *ngSwitchCase="FlightFarePriceInfoViewType.Plain">
+        <ng-container *ngTemplateOutlet="flightRuleTemplate"></ng-container>
+    </div>
+</ng-container>
+
+<ng-template #flightFareTitle>
+    <h6>Flight info</h6>
+</ng-template>
+
+<ng-template #flightRuleTemplate>
+    <div class="flight-fare-container">
+        <div *ngFor="let flightRule of flightRules" class="info-item" [class.nonstop]="flightRules?.length === 1">
+            <h6 class="flight-direction">
+                {{flightRule.segmentRefs.onpoint}} - {{flightRule.segmentRefs.offpoint}}
+            </h6>
+            
+            <div class="instructions">
+                <div class="instruction">
+                    <span class="instruction-name">
+                        <span class="fas fa-calendar-day" [class.text-success]="flightRule.allowChange" [class.text-danger]="!flightRule.allowChange"></span>
+                        Changes:
+                    </span>
+                    <span class="instruction-info">{{flightRule.allowChange ? 'Allowed' : 'Not allowed'}}</span>
+                </div>
+
+                <div class="instruction">
+                    <span class="instruction-name">
+                        <span class="fas fa-plane-slash" [class.text-success]="flightRule.allowCancel" [class.text-danger]="!flightRule.allowCancel"></span> 
+                        Cancel:
+                    </span>
+                    <span class="instruction-info">{{flightRule.allowCancel ? 'Allowed' : 'Not allowed'}}</span>
+                </div>
+
+                <div *ngFor="let instruction of flightRule.others" class="instruction">
+                    <span class="instruction-name">{{instruction.name}}:</span>
+                    <span class="instruction-info">{{instruction.info}}</span>
+                </div>
+                
+                <div class="instruction">
+                    <span class="instruction-name">Fare code: </span>
+                    <span class="instruction-info">{{flightRule.fareCode}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+

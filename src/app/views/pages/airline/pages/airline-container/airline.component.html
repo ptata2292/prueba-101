@@ -1,0 +1,5 @@
+<app-airline-loader [hidden]="airlineLoaderService.isLoaderHidden()"></app-airline-loader>
+<div [hidden]="airlineLoaderService.isLoaderShown()">
+    <app-airline-errors></app-airline-errors>
+    <router-outlet></router-outlet>
+</div>

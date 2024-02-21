@@ -1,0 +1,26 @@
+<div class="d-flex flex-column-fluid">
+    <!--begin::Container-->
+    <div class="container">
+        <!--begin::Dashboard-->
+        <!--begin::Row-->
+        <!--Begin Traveller::Count-->
+        <div class="row">
+          <div class="col-12">
+                <app-airline-search-header 
+                    [blockClass]="'brdSmallBlock'" 
+                    [fontStyle]="'h4'" 
+                    [showSearchButton]="true"
+                    [loadLatestSearch]="true"
+                     (search)="searchAirlines()">
+                </app-airline-search-header>
+          </div>
+        </div> 
+        <!--End Traveller::Count-->
+        <!--end::Row-->
+        <!--begin::Row-->
+        <app-airline-search-result [searchResult]="searchResult" [selectButtonText]="'Book now'" (selectionDone)="bookNow()"></app-airline-search-result>
+        <!--end::Row-->
+        <!--end::Dashboard-->
+    </div>
+    <!--end::Container-->
+</div>

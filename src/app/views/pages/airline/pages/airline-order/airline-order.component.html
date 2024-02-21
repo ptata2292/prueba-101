@@ -1,0 +1,140 @@
+<div *ngIf="!orderViewModel">
+    <div class="content d-flex flex-column flex-column-fluid pt-0" id="lr_content">
+        <div class="d-flex flex-column-fluid borderHeader">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="brdSmallBlock gutter-b d-flex">
+                            <div class="brdSmallBlock_inner pt-4 flex-column">
+                                <h2 class="text-white pl-2"><span class="opacity-70">Order Id: </span>{{orderId}}</h2>
+                                <h6 class="text-white-50 pl-2">Your Order has been cancelled  <i class="fas fa-times-circle text-danger icon-xl"></i></h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+    
+                <div class="gutter-b">
+                    <div class="d-flex justify-content-end mb-3">
+                        <button class="btn btn-primary ml-5" (click)="navigateToSearch()">Search</button>
+                        <button class="btn btn-primary ml-5" (click)="navigateToOrderList()">View Order List</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="orderId != null && orderViewModel && orderViewModel.flights && orderViewModel.flights.length > 0">
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid pt-0" id="lr_content">
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid borderHeader">
+            <!--begin::Container-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="brdSmallBlock gutter-b d-flex">
+                            <div class="brdSmallBlock_inner pt-4 flex-column">
+                                <app-airline-order-rloc class="pl-2" [payments]="orderViewModel.payments" [bookingReferences]="orderViewModel.bookingReferences" [orderId]="orderId"></app-airline-order-rloc>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Row-->
+                <!--begin::Details-->
+                <div class="gutter-b">
+                    <div class="d-flex justify-content-end mb-3">
+                        <button class="btn btn-primary ml-5" *ngIf="!orderViewModel.editMode" (click)="editOrder()">Edit order</button>
+                        <button (click)="navigateToOrderList()" *ngIf="!orderViewModel.editMode" class="btn btn-primary ml-5" >Order list</button>
+                        <button (click)="showDialog()" *ngIf="!orderViewModel.editMode" class="btn btn-danger ml-10" title="Cancel Order">Cancel Order</button>
+                        <button class="btn btn-success ml-5" *ngIf="orderViewModel.editMode" [ngClass]="isSaveChangesEnabled() ? '': 'disabled'" (click)="saveChanges()">Save changes</button>
+                        <button class="btn btn-primary ml-5" *ngIf="orderViewModel.editMode" (click)="cancelChanges()">Cancel changes</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-9">
+                        <div class="card card-custom mb-5" *ngIf="orderViewModel.editMode && orderViewModel.changedOrder">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="card-label">Changed Flights</div>
+                                </div>
+                                <div class="card-title" *ngIf="orderViewModel && orderViewModel.editMode && orderViewModel.changedOrder">
+                                    <button class="btn btn-primary" (click)="editFlights()">
+                                        Select other flights
+                                    </button>
+                                    <!-- <span class="text-primary font-weight-bold cursor-pointer" >
+                                        
+                                    </span> -->
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <app-airline-flight-item [flights]="orderViewModel.changedOrder.flights"></app-airline-flight-item>
+                            </div>
+                        </div>
+                        <div class="card card-custom mb-5">
+                            <div class="card-header"> 
+                                <div class="card-title">
+                                    <div class="card-label">
+                                        <ng-container *ngIf="orderViewModel.changedOrder">
+                                            Original 
+                                        </ng-container>
+                                        Flights
+                                    </div>
+                                </div>
+                                <div class="card-title" *ngIf="orderViewModel && orderViewModel.editMode && !orderViewModel.changedOrder">
+                                    <button class="btn btn-primary" (click)="editFlights()">
+                                        Select other flights
+                                    </button>
+                                </div>
+                                <div class="card-title" *ngIf="orderViewModel && orderViewModel.editMode && orderViewModel.changedOrder">
+                                    <span class="text-primary font-weight-bold cursor-pointer" (click)="orderViewModel.changedOrder.showOriginal = !orderViewModel.changedOrder.showOriginal">
+                                        view 
+                                            <i *ngIf="!orderViewModel.changedOrder.showOriginal" class="material-icons text-primary align-middle icon-md">expand_more</i>
+                                            <i *ngIf="orderViewModel.changedOrder.showOriginal" class="material-icons text-primary align-middle icon-md">expand_less</i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="card-body" *ngIf="!orderViewModel.changedOrder || orderViewModel.changedOrder.showOriginal">
+                                <app-airline-flight-item  [orderViewModel]="orderViewModel" [orderId]="orderId"></app-airline-flight-item>
+                            </div>
+                        </div>
+                        <!--begin::Details-->
+                        <div class="card card-custom mb-5">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <div class="card-label">Passengers</div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <app-airline-passenger-list *ngIf="!orderViewModel.editMode" [orderViewModel]="orderViewModel" [orderId]="orderId"></app-airline-passenger-list>
+                                <app-airline-passenger-form (passengerChanges)="passengerChanges($event)" *ngIf="orderViewModel.editMode" [passengers]="orderViewModel.passengers"></app-airline-passenger-form>
+                            </div>
+                        </div>
+                        <!--end::Details-->
+                    </div>
+                    <div class="col-3">
+                        <app-airline-order-changes *ngIf="orderViewModel.editMode" [orderId]="orderId"></app-airline-order-changes>
+                        <ng-container *ngIf="orderViewModel.changedOrder">
+                            <app-airline-order-summary [passengers]="orderViewModel.changedOrder.passengers"></app-airline-order-summary>
+                        </ng-container>
+                        <ng-container *ngIf="!orderViewModel.changedOrder">
+                            <app-airline-order-summary [passengers]="orderViewModel.passengers"></app-airline-order-summary>
+                        </ng-container>
+                        
+                        <div class="mb-5" *ngIf="!orderViewModel.editMode">
+                            <app-airline-payment-summary (makePayment)="makePayment()" [orderViewModel]="orderViewModel" [payments]="orderViewModel.payments" [passengers]="orderViewModel.passengers"></app-airline-payment-summary>
+                        </div>
+                    </div> 
+                </div>
+                <!--end::Details-->
+                <!--end::Dashboard-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+    <!--end::Content-->
+</div>
+
+<app-dialog #appDialog ></app-dialog>

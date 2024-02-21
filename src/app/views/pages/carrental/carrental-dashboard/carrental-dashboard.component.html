@@ -1,0 +1,214 @@
+<div *ngIf="isLoading" class="spinnerBg">
+  <mat-spinner class="spinner" [diameter]="30"></mat-spinner>
+</div>
+<div *ngIf="!isLoading" class="d-flex flex-column-fluid">
+  <!--begin::Container-->
+  <div class="container">
+    <!--begin::Dashboard-->
+    <!--begin::Row-->
+    <div class="row">
+      <div class="col-12">
+        <!--begin::Tiles Widget 1-->
+        <div class="card card-custom gutter-b card-stretch rounded-xl">
+          <!--begin::Header-->
+          <div class="card-header border-0">
+            <div class="card-toolbar">
+              <ul class="nav nav-bold nav-pills">
+                <li class="nav-item">
+                  <a class="nav-link rounded-pill colorBg active">Rental Cars</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link rounded-pill">Airport Transport</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!--end::Header-->
+          <!--begin::Body-->
+          <form #searchForm class="card-body pt-0 pl-6 pr-6">
+            <div class="tab-content">
+              <div class="tab-pane fade active show" id="lr_tab_pane_1" role="tabpanel">
+                <div class="brdBigBlock">
+                  <div class="brdBigBlock_inner">
+                    <div #fromDiv id="fromCityDiv" (click)="clickChange('from')" class="searchCity">
+                      <div class="searchContent">
+                        <span class="search_lbl text-dark-50 pb-2">Pick-up</span>
+                        <input (click)="clickChange('from')" *ngIf="click.from" id="fromCity" type="text" class="search_inputField h1 text-truncate from" readonly="" value="{{ getCarLocationDisplayName(carSearchFormGroup.value.from) }}" title="{{ getCarLocationDisplayName(carSearchFormGroup.value.from) }}">
+                        <!-- <div class="form-group lessMlr-1">
+                          <input type="text" class="form-control" placeholder="Place">
+                        </div> -->
+                        <div class="lessMlr-1" *ngIf="!click.from">
+                          <mat-form-field appearance="outline" class="w-100">
+                            <!-- <mat-label>Leaving From</mat-label> -->
+                            <input #fromInput type="text" matInput [formControl]="carSearchFormGroup.get('from')" [matAutocomplete]="autoFrom"
+                              [errorStateMatcher]="errorMatcher">
+                            <mat-autocomplete (optionSelected)="fromChange($event)" #autoFrom="matAutocomplete" [displayWith]="displayFn">
+                              <!-- <mat-option disabled class="loading" *ngIf="loadingLeavingFrom">
+                                <mat-spinner diameter="35"></mat-spinner>
+                              </mat-option>
+                              <mat-option disabled *ngIf="(filteredFromOptions | async)?.length === 0 && !loadingLeavingFrom">
+                                  No Results found
+                              </mat-option> -->
+                              <mat-option *ngFor="let option of filteredFromOptions | async" 
+                                  [value]="option">
+                                {{(option.value || option.name)}}
+                              </mat-option>
+                            </mat-autocomplete>                           
+                          </mat-form-field>
+                        </div> 
+                        <mat-error *ngIf="isSubmitted && carSearchFormGroup.get('from').hasError('required')">
+                          Pick-up is <strong>required</strong>
+                        </mat-error> 
+                        <mat-error *ngIf="isSubmitted && carSearchFormGroup.hasError('fromSelected')">Please Select Pick-up</mat-error>                         
+                      </div>
+                    </div>
+                    <span class="swipBtn" (click)="swipBtn()">
+                      <i class="fas fa-exchange-alt text-primary"></i>
+                    </span>
+                    <div #toDiv id="toCityDiv" (click)="clickChange('to')" class="searchCity">
+                      <div class="searchContent">
+                        <span class="search_lbl text-dark-50 pb-2 to">Same as Pick-up</span>
+                        <input (click)="clickChange('to')" *ngIf="click.to" id="toCity" type="text" class="search_inputField h1 text-truncate to" readonly=""  value="{{ getCarLocationDisplayName(carSearchFormGroup.value.to) }}" title="{{ getCarLocationDisplayName(carSearchFormGroup.value.to) }}">
+                        <!-- <div class="form-group lessMlr-1">
+                          <input type="text" class="form-control" placeholder="Place">
+                        </div> -->
+                        <div class="lessMlr-1" *ngIf="!click.to">
+                          <mat-form-field appearance="outline" class="w-100">
+                            <!-- <mat-label>Going To</mat-label> -->
+                            <input #toInput type="text" matInput [formControl]="carSearchFormGroup.get('to')" [matAutocomplete]="autoTo"
+                              [errorStateMatcher]="errorMatcher">
+                            <mat-autocomplete (optionSelected)="toChange($event)"  #autoTo="matAutocomplete" [displayWith]="displayFn">
+                              <mat-option *ngFor="let option of filteredToOptions | async" 
+                                [value]="option">
+                                {{ (option.value || option.name)}}
+                              </mat-option>
+                            </mat-autocomplete>                            
+                          </mat-form-field>
+                        </div> 
+                        <mat-error *ngIf="isSubmitted && carSearchFormGroup.get('to').hasError('required')">
+                          Drop-off is <strong>required</strong>
+                        </mat-error>
+                        <mat-error *ngIf="isSubmitted && carSearchFormGroup.hasError('toSelected')">Please Select Drop-off</mat-error>
+                        <mat-error *ngIf="isSubmitted && carSearchFormGroup.hasError('toFromMatch')">To and From are Same</mat-error>
+                      </div>
+                    </div>
+                    <div (click)="clickChange('start')" class="searchDate">
+                      <div id="startDate" class="searchContent">
+                        <span class="search_lbl text-dark-50 pb-2 from">Pick-up Date <i
+                            class="far fa-calendar-alt text-primary"></i></span>
+                        <div (click)="clickChange('start')" *ngIf="click.start" class="search_inputField h1">
+                          {{ carSearchFormGroup.value.start | date: 'dd'}} 
+                          <span class="search_inputField display6">{{ carSearchFormGroup.value.start | date: 'MMM'}}  {{ carSearchFormGroup.value.start | date: 'yyyy'}} </span>
+                        </div>
+                        <!-- <div class="form-group lessMlr-1">
+                          <input type="text" class="form-control" placeholder="Place">
+                        </div> -->
+                        <div class="lessMlr-1" *ngIf="!click.start">
+                          <mat-form-field class="w-100" appearance="outline">
+                            <!-- <mat-label>Depature</mat-label> -->
+                            <input matInput [min]="minToDate" [max]="maxToDate" 
+                              (click)="picker1.open()" [errorStateMatcher]="errorMatcher"
+                              [matDatepicker]="picker1" [formControl]="carSearchFormGroup.get('start')"
+                              (dateChange)="startDateChange('change', $event)">
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>                
+                          </mat-form-field>
+                        </div>
+                        <mat-error *ngIf="isSubmitted && carSearchFormGroup.get('start').hasError('required')">
+                          Pick-up Date is <strong>required</strong>
+                        </mat-error>
+                      </div>
+                    </div>
+                    <div (click)="clickChange('end')" class="searchDate">
+                      <div id="endDate" class="searchContent">
+                        <span class="search_lbl text-dark-50 pb-2">Drop-off Date<i
+                            class="far fa-calendar-alt text-primary"></i></span>
+                        <div (click)="clickChange('end')" *ngIf="click.end"
+                          class="search_inputField h1">
+                          {{ carSearchFormGroup.value.end | date: 'dd'}} 
+                          <span class="search_inputField display6">{{ carSearchFormGroup.value.end | date: 'MMM'}}  {{ carSearchFormGroup.value.end | date: 'yyyy'}} </span>
+                        </div>
+                        <!-- <div class="form-group lessMlr-1">
+                          <input type="text" class="form-control" placeholder="Place">
+                        </div> -->
+                        <div class="lessMlr-1" *ngIf="!click.end">
+                          <mat-form-field class="w-100" appearance="outline">
+                            <!-- <mat-label>From</mat-label> -->
+                            <input matInput [min]="minFromDate" [max]="maxFromDate" 
+                              (click)="picker2.open()" [errorStateMatcher]="errorMatcher"
+                              [matDatepicker]="picker2" [formControl]="carSearchFormGroup.get('end')"
+                              (dateChange)="endDateChange('change', $event)">
+                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                            <mat-datepicker #picker2></mat-datepicker>
+                            <!-- <mat-error *ngIf="isSubmitted && carSearchFormGroup.hasError('startEndMatch')">Check-Out date cannot be earlier than Check-In date
+                            </mat-error> -->
+                          </mat-form-field>
+                        </div>
+                        <mat-error *ngIf="isSubmitted && carSearchFormGroup.get('end').hasError('required')">
+                          Drop-off Date is <strong>required</strong>
+                        </mat-error>
+                        <mat-error *ngIf="isSubmitted && carSearchFormGroup.hasError('startEndMatch')">Drop-off Date cannot be earlier than Pick-up date
+                        </mat-error>
+                      </div>
+                    </div>
+                    <div class="searchDate">
+                      <div #pickupTimeDiv (click)="clickChange('pickupTime')" class="searchContent">
+                        <span class="search_lbl text-dark-50 pb-2">Pick-Up Time
+                          <i class="far fa-clock text-primary"></i></span>
+                        <div *ngIf="click.pickupTime" id="pickupTime" class="search_inputField h1">{{carSearchFormGroup.value.pickupTime}}
+                          <!-- <span class="search_inputField display6">AM</span> -->
+                        </div>
+                        <div class="lessMlr-1" *ngIf="!click.pickupTime">
+                          <mat-form-field class="w-100" appearance="outline">
+                            <mat-select #pickupTimeSelect (selectionChange)="pickupTimeChange($event.value)" [formControl]="carSearchFormGroup.get('pickupTime')">
+                              <mat-option *ngFor="let timing of timings" [value]="timing">
+                                {{timing}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                        <mat-error *ngIf="isSubmitted && carSearchFormGroup.get('pickupTime').hasError('required')">Please choose a pickupTime</mat-error>
+                      </div>
+                    </div>                    
+                    <div #dropoffTimeDiv (click)="clickChange('dropoffTime')" class="searchContent">
+                      <span class="search_lbl text-dark-50 pb-2">Drop-off Time
+                        <i class="far fa-clock text-primary"></i></span>
+                      <div *ngIf="click.dropoffTime" id="dropoffTime" class="search_inputField h1">{{carSearchFormGroup.value.dropoffTime}}
+                        <!-- <span class="search_inputField display6">AM</span> -->
+                      </div>
+                      <div class="lessMlr-1" *ngIf="!click.dropoffTime">
+                        <mat-form-field class="w-100" appearance="outline">
+                          <mat-select #dropoffTimeSelect (selectionChange)="dropoffTimeChange($event.value)" [formControl]="carSearchFormGroup.get('dropoffTime')">
+                            <mat-option *ngFor="let timing of timings" [value]="timing">
+                              {{timing}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <mat-error *ngIf="isSubmitted && carSearchFormGroup.get('dropoffTime').hasError('required')">Please choose a dropoffTime</mat-error>
+                    </div>                   
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-center pt-5">
+                <button (click)="search()" type="button" class="btn btn-primary btn-pill btn-lg colorBg font-size-h3 w-200px btn-shadow">
+                  Search <i class="far fa-arrow-alt-circle-right"></i>
+                </button>
+              </div>
+              <div class="tab-pane fade" id="lr_tab_pane_2" role="tabpanel">Lorem Ipsum passages, and more recently with
+                desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum
+                passages, and more recently with desktop publishing software like Aldus PageMaker including versions of
+                Lorem Ipsum. Lorem Ipsum passages, and more recently with desktop publishing software like Aldus
+                PageMaker including versions of Lorem Ipsum.</div>
+            </div>
+          </form>
+          <!--end::Body-->
+        </div>
+        <!--end::Tiles Widget 1-->
+      </div>
+    </div>
+    <!--end::Row-->
+    <!--end::Dashboard-->
+  </div>
+  <!--end::Container-->
+</div>

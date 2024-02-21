@@ -1,0 +1,42 @@
+<div *ngIf="orderId != null">
+    <div class="content d-flex flex-column flex-column-fluid pt-0" id="lr_content">
+
+        <div class="d-flex flex-column-fluid borderHeader">
+            <div class="container"> 
+                <div class="row">
+                    <div class="col-12">
+                        <div class="brdSmallBlock gutter-b d-flex">
+                            <div class="brdSmallBlock_inner pt-4 flex-column">
+                                <h2 class="text-white h3 pl-2">Change flights</h2>
+                                <h6 class="text-white-50 pl-2">Select new departure / arriaval or change flight date</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="gutter-b">
+                    
+                    <div class="d-flex justify-content-end mb-3">
+                        <button (click)="backToOrderDetails()" class="btn btn-primary ml-5" title="Back to order details">Back to order details</button>
+                    </div>
+
+                    <div>
+                            <app-airline-search-header 
+                                [blockClass]="'brdSmallBlock'" 
+                                [airlineSearch]="search"
+                                [fontStyle]="'h4'" 
+                                [hidePtc]="true"
+                                [showSearchButton]="true"
+                                [loadLatestSearch]="false"
+                                (search)="searchAirlines()">
+                            </app-airline-search-header>
+                            
+                            <app-airline-search-result [searchResult]="searchResult"
+                            [selectButtonText]="'Confirm'" (selectionDone)="reshop()"></app-airline-search-result>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,411 @@
+<div *ngIf="isLoading">
+    <mat-spinner class="spinner" [diameter]="30"></mat-spinner>
+</div>
+<!--begin::Entry-->
+<div *ngIf="!isLoading && selectedRoom != null" class="d-flex flex-column-fluid">
+    <!--begin::Container-->
+    <div class="container">
+        <!--begin::Dashboard-->
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-12">
+                <div class="brdSmallBlock gutter-b">
+                    <div class="brdSmallBlock_inner pt-4 flex-column">
+                        <h2 class="text-white pl-2 opacity-70">Booking Details</h2>
+                        <h6 class="text-white-50 pl-2">Review Fare and provide booking details</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end::Row-->
+        <!--begin::Row-->
+        <div class="row gutter-b">
+            <div class="col-9">
+                <!--begin::Details-->
+                <div class="card card-custom mb-3">
+                    <div class="card-body p-0">
+                        <div class="d-flex">
+                            <div class="htlImgBlock d-flex align-items-center justify-content-center">
+                                <img *ngIf="selectedRoom.hotelImageURL!=''" class="w-100" [src]="selectedRoom.hotelImageURL" style="height: 183px;">
+                                <img *ngIf="selectedRoom.hotelImageURL===''" class="w-100" src="assets/media/Hotels/noImageBW.png" style="height: 183px;">
+<!--                                <i *ngIf="selectedRoom.hotelImageURL===''" class="fas fa-hotel icon-6x opacity-50"></i>-->
+                            </div>
+                            <div class="d-flex flex-lg-fill border-right">
+                                <div class="d-flex flex-column flex-wrap p-5 w-100">
+                                    <h3 class="mb-1">{{selectedRoom.basicPropertyInfo.name}}</h3>
+                                    <div *ngIf="selectedRoom.contactInformation[0].address[0].addressLine.length == 0" class="text-muted font-size-lg font-weight-bold">{{selectedRoom.contactInformation[0].address[0].street}}, {{selectedRoom.contactInformation[0].address[0].city}}, {{selectedRoom.contactInformation[0].address[0].stateProv.value || selectedRoom.contactInformation[0].address[0].stateProv.name}} {{selectedRoom.contactInformation[0].address[0].country.value || selectedRoom.contactInformation[0].address[0].country.name}}</div>
+                                    <div *ngIf="selectedRoom.contactInformation[0].address[0].addressLine.length>0" class="text-muted font-size-lg font-weight-bold">{{selectedRoom.contactInformation[0].address[0].addressLine[0]}}, {{selectedRoom.contactInformation[0].address[0].city}}, {{selectedRoom.contactInformation[0].address[0].stateProv.value || selectedRoom.contactInformation[0].address[0].stateProv.name}} {{selectedRoom.contactInformation[0].address[0].country.value || selectedRoom.contactInformation[0].address[0].country.name}}</div>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="pr-2">
+                                            <div class="d-block pt-4" *ngIf="selectedRoom.relativePosition">
+                                                <div class="btn btn-icon btn-outline-secondary btn-circle btn-xs mr-2">
+                                                    <i class="fas fa-map-marker-alt opacity-50"></i>
+                                                </div>
+                                                <span class="font-size-lg">{{selectedRoom.relativePosition.distance}} Miles From City Center</span>
+                                            </div>
+                                            <div class="d-block pt-4" *ngIf="!selectedRoom.relativePosition">
+                                                <div>
+                                                </div>
+                                                <span class="font-size-lg"></span>
+                                            </div>
+                                            <div class="d-block pt-3">
+                                                <div class="btn btn-icon btn-outline-secondary btn-circle btn-xs mr-2">
+                                                    <i class="fas fa-phone-alt icon-1x opacity-50"></i>
+                                                </div>
+                                                <span class="font-size-lg">{{formatPhoneNumber(selectedRoom.contactInformation[0].telephone[0].phoneNumber)}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="mr-10">
+                                            <div class="d-block pt-4">
+                                                <i class="fas fa-house-user text-primary pr-1"></i>
+                                                <span class="font-size-lg">{{searchCriteria.rooms}} Rooms</span>
+                                            </div>
+                                            <div class="d-flex pt-4">
+                                                <div>
+                                                    <i class="fas fa-door-open text-success pr-1"></i>
+                                                    <span *ngIf="selectedRoom.hotelPolicies" class="font-size-lg">{{selectedRoom.dateTimeSpan.start | date:'mediumDate'}} - {{selectedRoom.hotelPolicies.hotelPolicy[0].hotelPolicyInformation.validCheckInTime}}</span>
+                                                    <span *ngIf="!selectedRoom.hotelPolicies" class="font-size-lg">{{selectedRoom.dateTimeSpan.start | date:'mediumDate'}}</span>
+                                                </div>
+                                                <div class="ml-4">
+                                                    <i class="fas fa-door-closed text-danger pr-1"></i>
+                                                    <span *ngIf="selectedRoom.hotelPolicies" class="font-size-lg">{{selectedRoom.dateTimeSpan.end | date:'mediumDate'}} - {{selectedRoom.hotelPolicies.hotelPolicy[0].hotelPolicyInformation.validCheckOutTime}}</span>
+                                                    <span *ngIf="!selectedRoom.hotelPolicies" class="font-size-lg">{{selectedRoom.dateTimeSpan.end | date:'mediumDate'}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-block pt-3">
+                                        <div class="btn btn-icon btn-outline-secondary btn-circle btn-xs mr-2">
+                                            <i class="fas fa-slash icon-1x opacity-50"></i>
+                                        </div>
+                                        <span class="font-size-lg">{{selectedRoom.rooms[0].termsAndConditions[0].cancelPenalties[0].description[0].text[0].value}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--begin::Items-->
+                    <div class="d-flex">
+                        <table mat-table [dataSource]="selectedRoom.rooms" multiTemplateDataRows class="table table-checkable">
+                            <ng-container matColumnDef="Item">
+                              <th mat-header-cell *matHeaderCellDef> Item </th>
+                              <td mat-cell *matCellDef="let element; let i = dataIndex"> Room-{{i + 1}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="Description">
+                              <th mat-header-cell *matHeaderCellDef> Description </th>
+                              <td mat-cell *matCellDef="let element"> {{ element.product.roomName | titlecase }} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="Rate">
+                                <th mat-header-cell *matHeaderCellDef class="text-right"> Rate ($) </th>
+                                <td mat-cell *matCellDef="let element" class="text-right"> {{element.productPrice.roomRate[0].rate.amountBeforeTax | number : '1.2-2'}} </td>
+                              </ng-container>
+
+                            <ng-container matColumnDef="Tax">
+                                <th mat-header-cell *matHeaderCellDef class="text-right"> Tax ($) </th>
+                                <td mat-cell *matCellDef="let element" class="text-right"> {{element.productPrice.roomRate[0].taxes.total.value | number : '1.2-2'}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="Fees">
+                                <th mat-header-cell *matHeaderCellDef class="text-right"> Fees ($) </th>
+                                <td mat-cell *matCellDef="let element" class="text-right"> 0.00 </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="Total">
+                                <th mat-header-cell *matHeaderCellDef class="text-right"> Total ($) </th>
+                                <td mat-cell *matCellDef="let element" class="text-right"> {{element.productPrice.roomRate[0].rate.value | number : '1.2-2'}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="extraFees">
+                                <td mat-cell [attr.colspan]="displayedColumns.length"
+                                    *matCellDef="let element">
+                                    <div class="text-muted font-size-sm" *ngFor="let extraFeeCalculation of extraFeeDesctiptionWithCalculation(selectedRoom, element)">
+                                        <span><i class="fa fa-sm fa-certificate"></i></span> + ${{ extraFeeCalculation.total | number:  '1.2-2'}}
+                                        <ng-container *ngIf="extraFeeCalculation.extraFee.chargeTaxable === 'Y'">tax excl.</ng-container>
+                                        <ng-container *ngIf="extraFeeCalculation.extraFee.chargeTaxable === 'N'">tax incl.</ng-container>
+                                        <ng-container *ngIf="extraFeeCalculation.showCalculation">
+                                            (<ng-container *ngIf="extraFeeCalculation.extraFee.chargeType === 'Percent'">${{extraFeeCalculation.offerPrice | number:  '1.2-2'}} x {{extraFeeCalculation.extraFee.chargeAmount}}%
+                                            </ng-container>
+                                            <ng-container *ngIf="extraFeeCalculation.extraFee.chargeType === 'Charge'">${{extraFeeCalculation.extraFee.chargeAmount | number:  '1.2-2'}}
+                                            </ng-container>
+                                            <ng-container *ngIf="extraFeeCalculation.chargeBasisCoeff > 1"> x {{extraFeeCalculation.chargeBasisCoeff}}
+                                                <ng-container *ngIf="extraFeeCalculation.extraFee.chargeBasis === 'By Person'">people</ng-container>
+                                                <ng-container *ngIf="extraFeeCalculation.extraFee.chargeBasis === 'By Room' || extraFeeCalculation.extraFee.chargeBasis === 'Per Room'">rooms</ng-container>
+                                            </ng-container>
+                                            <ng-container *ngIf="extraFeeCalculation.extraFee.chargePeriod === 'Per Night' && extraFeeCalculation.chargePeriodCoeff > 1"> 
+                                                x {{extraFeeCalculation.chargePeriodCoeff}} nights
+                                            </ng-container>)</ng-container>: {{extraFeeCalculation.extraFee.details}}
+
+                                    </div>
+                                </td>
+                              </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="multiple-row-first"></tr>
+                            <tr mat-row *matRowDef="let row; columns: ['extraFees'];" class="multiple-row-last"></tr>
+                        </table>
+
+                    </div>
+                </div>
+                <!--end::Details-->
+                <!-- Start::Passenger -->
+                <form [formGroup]="passengerFG" class="card card-custom">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h3 class="card-label">Payment Information</h3>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mt-2">
+                            <div class="col-4 form-group">
+                                <mat-form-field class="w-100" appearance="outline">
+                                    <mat-label>First Name</mat-label>
+                                    <input matInput formControlName="GivenName" (change)="changeFirstName()" placeholder="Enter First Name" required>
+                                    <mat-error *ngIf="passengerFG.get('GivenName').hasError('required')">First Name is Required</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-4 form-group">
+                                <mat-form-field class="w-100" appearance="outline">
+                                    <mat-label>Last Name</mat-label>
+                                    <input matInput formControlName="Surname" (change)="changeSurname()" placeholder="Enter Last Name" required>
+                                    <mat-error *ngIf="passengerFG.get('Surname').hasError('required')">Last Name is Required</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-4 form-group">
+                                <mat-form-field class="w-100" appearance="outline">
+                                    <mat-label>Email</mat-label>
+                                    <input matInput formControlName="Email" placeholder="Enter Email" required>
+                                    <mat-error *ngIf="passengerFG.get('Email').hasError('required')">Email is Required</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-4 form-group">
+                                <mat-form-field class="w-100" appearance="outline">
+                                    <mat-label>Address</mat-label>
+                                    <input matInput formControlName="Address" placeholder="Enter Address">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-4 form-group">
+                                <mat-form-field class="w-100" appearance="outline">
+                                    <mat-label>City</mat-label>
+                                    <input matInput formControlName="City" placeholder="Enter City" required>
+                                    <mat-error *ngIf="passengerFG.get('City').hasError('required')">City is Required</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-4 form-group">
+                                <mat-form-field class="w-100" appearance="outline">
+                                    <mat-label>State</mat-label>
+                                    <mat-select *ngIf="selectedStates.length>0" formControlName="State" placeholder="Enter State" required>
+                                        <input class="form-group w-100 p-2 pl-4" (keyup)="onStateKey($event.target.value)">
+                                       <mat-option *ngFor="let state of selectedStates" [value]="state.shortName">{{state.fullName}}</mat-option>
+                                     </mat-select>
+                                    <input *ngIf="selectedStates.length==0" matInput formControlName="State" placeholder="Enter State (Abbreviations Only)" required>
+                                    <mat-error *ngIf="passengerFG.get('State').hasError('required')">State is Required</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-4 form-group">
+                                <mat-form-field class="w-100" appearance="outline">
+                                    <mat-label>Zip</mat-label>
+                                    <input matInput formControlName="Zip" placeholder="Enter Zip" required>
+                                    <mat-error *ngIf="passengerFG.get('Zip').hasError('required')">Zip Code is Required</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-4 form-group">
+                                <mat-form-field class="w-100" appearance="outline">
+                                    <mat-label>Country</mat-label>
+                                    <mat-select formControlName="Country" placeholder="Enter Country" required>
+                                        <input class="form-group w-100 p-2 pl-4" (keyup)="onCountryKey($event.target.value)" appearance="outline">
+                                       <mat-option *ngFor="let country of selectedCountries" [value]="country.countryCode">{{country.fullName}}</mat-option>
+                                     </mat-select>
+                                    <!-- <input matInput formControlName="Country" placeholder="Enter Country" required> -->
+                                    <mat-error *ngIf="passengerFG.get('Country').hasError('required')">Country is Required</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-4 form-group">
+                                <mat-form-field class="w-100" appearance="outline">
+                                    <mat-label>Phone</mat-label>
+                                    <input matInput formControlName="Phone" placeholder="Enter Phone Number" maxlength="13"  required>
+                                    <mat-error *ngIf="passengerFG.get('Phone').hasError('required')">Phone Number is Required</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-8 form-group">
+                                <mat-form-field class="w-100" appearance="outline">
+                                    <mat-label>Comments</mat-label>
+                                    <input matInput formControlName="Comments" placeholder="Enter Comments">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <!-- end::Passenger -->
+                <!-- Start::Trip -->
+                <form [formGroup]="roomOccupantAFG" class="card card-custom mt-3">
+                    <div formArrayName="roomOccupants" *ngFor="let roomOccupant of roomOccupantAFG.get('roomOccupants')['controls']; let i = index;">
+                        <div class="card card-custom mb-3" [formGroupName]="i">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <h3 class="card-label">Occupant for Room-{{i+1}} Details</h3>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mt-2">
+                                    <div class="col-4 form-group">
+                                        <mat-form-field class="w-100" appearance="outline">
+                                            <mat-label>First Name Of Occupant for Room</mat-label>
+                                            <input matInput formControlName="GivenName" placeholder="Enter First Name Of Occupant" required>
+                                            <mat-error *ngIf="roomOccupantFG.get('GivenName').hasError('required')">First Name is Required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-4 form-group">
+                                        <mat-form-field class="w-100" appearance="outline">
+                                            <mat-label>Last Name Of Occupant for Room</mat-label>
+                                            <input matInput formControlName="Surname" placeholder="Enter Last Name Of Occupant" required>
+                                            <mat-error *ngIf="roomOccupantFG.get('Surname').hasError('required')">Last Name is Required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-4 form-group">
+                                        <mat-form-field class="w-100" appearance="outline">
+                                            <mat-label>No. of Occupants for Room</mat-label>
+                                            <mat-select placeholder="Enter No. of Occupants" formControlName="count" required>
+                                                <mat-option *ngFor="let number of numbers" [value]="number">
+                                                  {{number}}
+                                                </mat-option>
+                                              </mat-select>
+                                            <!-- <input matInput formControlName="count" placeholder="Enter No. of Occupants" required> -->
+                                            <mat-error *ngIf="roomOccupantFG.get('count').hasError('required')">Number of Occupants is Required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <!-- end::Trip -->
+                <!-- Start::Payment -->
+                <form [formGroup]="creditCardFG" class="card card-custom mt-3">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h3 class="card-label">Payment Information</h3>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mt-2">
+                            <div class="col-6 form-group">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Credit Card Type</mat-label>
+                                    <mat-select formControlName="CreditType" required>
+                                      <mat-option *ngFor="let c of cardTypes" [value]="c.code">
+                                        {{c.name}}
+                                      </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="creditCardFG.get('CreditType').hasError('required')">Please choose Credit Card Type</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6"></div>
+                            <div class="col-6 form-group">
+                                <mat-form-field class="w-100" appearance="outline">
+                                    <mat-label>Name on Card</mat-label>
+                                    <input matInput formControlName="NameonCard" placeholder="Enter Name Credit Card" required>
+                                    <mat-error *ngIf="creditCardFG.get('NameonCard').hasError('required')">Name on Card is Required</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6"></div>
+                            <div class="col-6 form-group">
+                                <mat-form-field class="w-100" appearance="outline">
+                                    <mat-label>Credit Card Number</mat-label>
+                                    <input matInput appCreditCard autocomplete="off" formControlName="CreditCardNumber" placeholder="Enter Credit Card Number" required>
+                                    <mat-error *ngIf="creditCardFG.get('CreditCardNumber').hasError('required')">Credit Card Number is Required</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-2 form-group">
+                                <mat-form-field class="w-100" appearance="outline">
+                                    <mat-label>Security Code</mat-label>
+                                    <input matInput appOnlyNumber formControlName="SecurityCode"  maxlength="3" placeholder="Enter Security Code" required>
+                                    <mat-error *ngIf="creditCardFG.get('SecurityCode').hasError('required')">Security Code is Required</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-2 form-group">
+                                <mat-form-field class="w-100" appearance="outline">
+                                    <mat-label>Exp Month</mat-label>
+                                    <mat-select formControlName="ExpMonth" required>
+                                      <mat-option *ngFor="let m of monthArray" [disabled]="isMonthDisable(m)" [value]="m">
+                                        {{m}}
+                                      </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="creditCardFG.get('ExpMonth').hasError('required')">Please choose a Month</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-2 form-group">
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>Exp Year</mat-label>
+                                    <mat-select (selectionChange)="yearChange($event.value)" formControlName="ExpYear" required>
+                                      <mat-option *ngFor="let y of yearArray" [value]="y">
+                                        {{y}}
+                                      </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="creditCardFG.get('ExpYear').hasError('required')">Please choose a Year</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6"></div>
+                            <div class="col-12 form-group">
+                                <div class="checkbox-list">
+                                    <label class="checkbox">
+                                        <input type="checkbox" formControlName="termsAndConditions" name="Checkboxes1" required/>
+                                        <span></span>
+                                        By checking this box I hereby agree to the terms and conditions set forth.
+                                    </label>
+                                    <mat-error *ngIf="creditCardFG.get('termsAndConditions').hasError('required') && creditCardFG.get('termsAndConditions').dirty">Please agree with terms and conditions</mat-error>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <!-- end::Payment -->
+                <!-- Start::Buttons -->
+                <div class="row mt-4 align-items-end">
+                    <div class="col-12 ml-lg-auto text-right">
+                        <button type="button" title="Booking Cancel" (click)="showDialog()" class="btn btn-secondary">Cancel</button>
+                        <button type="submit" (click)="bookRoom()" class="btn btn-primary ml-2">Book Now</button>
+                    </div>
+                </div>
+                <!-- End::Buttons -->
+            </div>
+            <!--Start::Price-->
+            <div class="col-3">
+                <div class="card card-custom">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h3 class="card-label">Fare Summary</h3>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="d-flex pt-3 justify-content-around">
+                            <div class="col-7 font-size-lg text-left">Total Room Charges</div>
+                            <div class="col-5 font-size-lg font-weight-bold text-right">${{totalRoomCharges | number : '1.2-2'}}</div>
+                        </div>
+                        <div class="separator separator-dashed pt-3 mb-3"></div>
+                        <div class="d-flex justify-content-around">
+                            <div class="col-7 font-size-lg text-left">Total Taxes</div>
+                            <div class="col-5 font-size-lg font-weight-bold text-right">${{totalTaxes | number : '1.2-2'}}</div>
+                        </div>
+                        <div class="separator separator-dashed pt-3 mb-3"></div>
+                        <div class="d-flex pb-3 justify-content-around">
+                            <div class="col-7 font-size-lg text-left">Total Fees</div>
+                            <div class="col-5 font-size-lg font-weight-bold text-right">${{totalFees | number : '1.2-2'}}</div>
+                        </div>
+                        <div class="d-flex border-top border-2 pt-2 pb-2 justify-content-around">
+                            <div class="col-6 text-left font-size-h4">Total Amount</div>
+                            <div class="col-6 text-right font-weight-bold font-size-h3">${{totalAmount | number : '1.2-2'}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End::Price-->
+        </div>
+        <!--end::Row-->
+        <!--end::Dashboard-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::Entry-->
+<app-dialog #appDialog></app-dialog>

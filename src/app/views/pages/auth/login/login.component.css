@@ -1,0 +1,34 @@
+.login.login-lr .login-signin,
+.login.login-lr .login-signup,
+.login.login-lr .login-forgot {
+  display: none; }
+
+.login.login-lr.login-signin-on .login-signin {
+  display: block; }
+
+.login.login-lr.login-signup-on .login-signup {
+  display: block; }
+
+.login.login-lr.login-forgot-on .login-forgot {
+  display: block; }
+
+.login.login-lr .login-form {
+  width: 100%;
+  max-width: 450px; }
+
+@media (max-width: 575.98px) {
+  .login.login-lr .login-form {
+    width: 100%;
+    max-width: 100%; } }
+
+.form-control2 {
+  height: 46px; border-radius: 46px; border: none; padding-left: 1.5rem;
+  padding-right: 1.5rem; margin-top: 1.5rem; background: rgba(0, 0, 50, 0.6);
+  color: #fff; font-size: 1.2rem !important;}
+
+.footerFixed {
+  width: 100%; bottom: 0px; position: fixed;
+}  
+.btn {
+  font-size: 1.2rem !important;
+}

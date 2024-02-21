@@ -1,0 +1,154 @@
+<div [hidden]="!airlineLoaderService.isSearchResultLoaderShown()">
+    <app-airline-loader></app-airline-loader>
+</div>
+<div [hidden]="airlineLoaderService.isSearchResultLoaderShown()">
+    <div *ngIf="searchResult.isSearchCompleted && (searchResult.grouppedFlightList == null || searchResult.grouppedFlightList.length == 0)" class="alert alert-custom alert-outline-info fade show text-center border-0" role="alert">
+        <div class="alert-text h2">
+            <i class="fas fa-plane icon-2x text-info pr-2"> No Flights Found </i>
+            <div class="mt-3">
+                No flights found on this route for the requested date.
+            </div>
+        </div>
+    </div>
+
+    <!--begin:: header-->
+    <div *ngIf="searchResult.grouppedFlightList != null && searchResult.grouppedFlightList.length != 0">
+        <div id="tf-selector" class="d-flex flex-row justify-content-end">
+            <span class="font-size-h5">Time format:</span>
+
+            <input type="radio" id="tf12" name="time-format" value="12" (change)="changeFlightsTimeFormat($event)"
+                [checked]="searchResult.timeFormat == 12">
+            <label for="tf12">12-hour am/pm</label>
+
+            <input type="radio" id="tf24" name="time-format" value="24" (change)="changeFlightsTimeFormat($event)"
+                [checked]="searchResult.timeFormat == 24">
+            <label for="tf24">24-hour</label>
+        </div>
+    </div>
+    <!--end:: header-->
+
+    <div class="row gutter-b mt-5" *ngIf="searchResult.grouppedFlightList && searchResult.grouppedFlightList.length">
+        <div class="col-12">
+
+            <div id="list-header" class="col-12 card card-custom mb-3">
+                <div class="d-flex align-items-center flex-wrap p-5">
+                    <div class="d-flex flex-fill first-column-width-r">
+                        <div class="w-50">Airline / Flt # and type of airplane</div>
+                        <div>Departure / Time of flight / Arrival</div>
+                    </div>
+                    <div class="d-flex justify-content-end flex-grow-100">Cost</div>
+                </div>
+            </div>
+
+            <!--begin::Card-->
+            <div class="card card-custom mb-3" *ngFor="let groupFlight of searchResult.grouppedFlightList">
+                <div class="card-body p-0">
+                    <div class="d-flex align-items-center flex-wrap"  [ngClass]="searchResult.selectedOffer != null && groupFlight.flightList == searchResult.selectedOffer.flightList ? 'border-solid border-2 border-success rounded' : ''">
+                        <div class="d-flex flex-column first-column-width-r">
+                            <app-airline-flight-item [flights]="groupFlight.flightList"></app-airline-flight-item>
+                        </div>
+                        <div class="hrVertical h-150px"></div>
+                        <div class="d-flex justify-content-end flex-grow-100 align-self-baseline mt-15 pl-5 pr-5">
+                            <h1 class="pt-3 mr-4">
+                                <ng-container [ngTemplateOutlet]="farePrice"
+                                    [ngTemplateOutletContext]="{fare: (searchResult.selectedOffer != null && groupFlight.flightList == searchResult.selectedOffer.flightList ? selectedFare : groupFlight.flightFares[0])}">
+                                </ng-container>
+                            </h1>
+                            <a (click)="toggleFare(groupFlight)" class="btn btn-outline-primary font-weight-bold font-size-h4 price-ctrl">
+                                <div class="d-flex flex-row">
+                                    <div class="text-right">
+                                        <p>{{ (!groupFlight.showPrices ? "Show" : "Hide") + " Prices" }}</p>
+                                        <p class="font-size-sm">book flight</p>
+                                    </div>
+                                    <i class="fas ml-2 mt-1" [ngClass]="!groupFlight.showPrices ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="separator separator-dashed border-secondary" *ngIf="groupFlight.showPrices"></div>
+                <!--begin::Items-->
+                <div class="d-flex justify-content-end flex-wrap" [@collapse]="!groupFlight.showPrices">
+                    <div *ngFor="let flightFare of groupFlight.flightFares"
+                        class="flight-fare bgLightyellow pl-5 pr-5 pt-3 pb-3"
+                        [ngClass]="searchResult.selectedOffer && flightFare == selectedFare ? 'bg-primary text-white' : 'bg-hover-primary text-hover-white'"
+                        (click)="selectFare(groupFlight, flightFare)">
+                        
+                        <div class="cabin-type-container">
+                            <span class="cabin-type font-weight-bold opacity-60">{{flightFare.cabinType}}</span>
+                        </div>
+                        <span class="font-size-h2">
+                            <ng-container [ngTemplateOutlet]="farePrice" [ngTemplateOutletContext]="{fare: flightFare}"></ng-container>
+                        </span>
+                        <div>
+                            <app-airline-flight-fare-info [flightRules]="flightFare.flightRules"
+                                                        [viewType]="FlightFarePriceInfoViewType.Popup">
+                            </app-airline-flight-fare-info>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Items-->
+            </div>
+            <!--end::Card-->
+        </div>
+    </div>
+
+    <!--begin:: Total-->
+    <div class="colorBlock" *ngIf="searchResult.selectedOffer != null">
+        <div class="d-flex align-items-center flex-wrap p-3">
+            <div class="d-flex flex-fill">
+                <ng-container  *ngFor="let flight of searchResult.selectedOffer.flightList">
+                    <div class="d-flex flex-row flex-fill">
+                        <div class="d-flex align-items-center flex-lg-fill">
+                            <div class="symbol symbol-50 bg-white-o-30 mr-4">
+                                <img (error) ="onImgError($event)" [src]="getImageName(flight.flightSegments[0].airlineID)" alt="image" />
+                            </div>
+                            <div class="d-flex flex-column flex-wrap">
+                                <h5 class="mb-1">{{flight.flightSegments[0].airlineName}}</h5>
+                                <div class="d-flex">
+                                    <span class="text-white-50 font-weight-bold mr-2">{{flight.flightSegments[0].airlineID + flight.flightSegments[0].flightNumber}}</span>
+                                    <span class="text-white-50 font-weight-bold mr-2">|</span>
+                                    <span class="text-white-50 font-weight-bold mr-2">{{flight.flightSegments[0].aircraftName}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center flex-lg-fill">
+                            <div class="d-flex flex-column flex-wrap align-items-end">
+                                <h5 class="mb-1">{{ flight.departureTime }}</h5>
+                                <span class="text-white-50 font-weight-bold">{{ flight.departureAirportCode }}</span>
+                            </div>
+                            <div class="d-flex flex-column flex-wrap align-items-center pl-2 pr-2">
+                                <h5 class="mb-1">-</h5>
+                                <span class="text-primary font-weight-bold">-</span>
+                            </div>
+                            <div class="d-flex flex-column flex-wrap">
+                                <h5 class="mb-1">{{ flight.arrivalTime }}
+                                    <span *ngIf="nonZero(flight.totalDays)" class="label label-light-danger label-inline font-weight-bold align-top">+{{flight.totalDays}} day</span>
+                                </h5>
+                                <span class="text-white-50 font-weight-bold"> {{ flight.arrivalAirportCode }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hrVerticalLight mr-5 h-50px"></div>
+                </ng-container>
+            </div>
+            <div class="d-flex align-items-right">
+                <h1 class="pt-3 mr-4">
+                    <ng-container [ngTemplateOutlet]="farePrice" [ngTemplateOutletContext]="{fare: selectedFare}"></ng-container>
+                </h1>
+                
+                <a (click)="bookNow()" class="btn btn-outline-primary font-weight-bold font-size-h4 bg-white text-dark-75">
+                    {{selectButtonText}}
+                </a>
+            </div>
+        </div>
+    </div>
+<!--end:: Total-->
+</div>
+
+<ng-template #farePrice let-fare="fare">
+    ${{ fare.totalPrice | number : '1.2-2' }}
+                <div class="text-right" *ngIf="fare.reshopPrices">
+                    <span class="font-size-h5" [ngClass]="due >= 0 ? 'text-danger' : 'text-success'" *ngVar="getDuePrice(fare) as due">${{ due >= 0 ? '+' : ''}}{{ due | number : '1.2-2' }}</span>
+                </div>
+</ng-template>

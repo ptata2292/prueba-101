@@ -1,0 +1,34 @@
+<div class="error-container mt-10" *ngIf="airlineErrorService.showErrorInfo">
+    <div class="card card-custom mt-3">
+        <div class="card-header">
+            <div class="card-title-with-hide-button">
+                <div class="pull-right text-right"><button class="btn btn-primary" (click)="hide()">Hide</button></div>
+                <h3 class="card-label">Errors and Warnings</h3>
+            </div>
+        </div>
+        <div class="card-body">
+            <h3 *ngIf="airlineErrorService.errors && airlineErrorService.errors.length > 0" class="card-label  text-danger">Errors</h3>
+            <ul>
+                <li *ngFor="let error of airlineErrorService.errors">
+                    {{error.value.replace("Document issuance failed. Root cause: ","")}}
+                </li>
+            </ul>  
+            
+            <h3 *ngIf="airlineErrorService.generalErrors && airlineErrorService.generalErrors.length > 0" class="card-label text-danger">General Errors</h3>
+            <ul>
+                <li *ngFor="let generalError of airlineErrorService.generalErrors">
+                    <div>{{generalError.value}}</div>
+                    <pre *ngIf="generalError.data">{{generalError.data | json}}</pre>
+                </li>
+            </ul> 
+
+            <h3 *ngIf="airlineErrorService.warnings && airlineErrorService.warnings.length > 0" class="card-label text-warning">Warnings</h3>
+            <ul>
+                <li *ngFor="let warning of airlineErrorService.warnings">
+                    {{warning.value}}
+                </li>
+            </ul>    
+  
+        </div>
+    </div> 
+</div>   

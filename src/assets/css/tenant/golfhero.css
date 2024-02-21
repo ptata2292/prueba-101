@@ -1,0 +1,15 @@
+.lr-login--bg {
+  background-color: #333; background-image: radial-gradient(circle, rgba(209, 211, 224, 0.4), #181C32 70%); background-position: 0px 0px; background-size: cover; background-repeat: no-repeat;
+}
+.imgRight {
+  background-image: url(../../media/ota/bgRight.svg); background-position: 337px 0px; width: 700px; height: 537px; position: absolute; right: 0px; top: 30px; max-width: none; background-repeat: no-repeat; opacity: 0.1;
+}
+.imgLeft {
+  background-image: url(../../media/ota/bgLeft.svg); background-position: -190px 0px; width: 700px; height: 537px; position: absolute; left: 0px; top: 30px; max-width: none; background-repeat: no-repeat; opacity: 0.1;
+}
+.form-control2 {
+  background: rgba(0, 0, 0, 0.4);
+}
+.bg-white-o-100 {
+  background-color: rgba(255, 255, 255, 0.2) !important
+}

@@ -1,0 +1,15 @@
+<div class="d-flex flex-column-fluid">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+          <app-airline-search-header [loadLatestSearch]="false" [from]="'dashboard'" [blockClass]="'brdBigBlock'" [fontStyle]="'h1'" (search)="search()"></app-airline-search-header>
+          
+          <div class="d-flex justify-content-center pt-5">
+            <button (click)="btnSearchClick()" type="button" class="btn btn-primary btn-pill btn-lg colorBg font-size-h3 w-200px btn-shadow">
+              Search <i class="far fa-arrow-alt-circle-right"></i>
+            </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

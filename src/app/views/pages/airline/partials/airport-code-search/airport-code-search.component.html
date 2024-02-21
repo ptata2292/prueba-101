@@ -1,0 +1,14 @@
+<div class="searchContent">
+    <span *ngIf="showLabel" class="search_lbl text-dark-50 pb-2 to">{{label}}</span>
+    <input (click)="showAutocomplete()" *ngIf="!isAutocompleteShown" class="search_inputField text-truncate" type="text" [ngClass]="fontStyle" value="{{ getAirPortDisplayName(flight[field]) }}" title="{{ getAirPortDisplayName(flight[field]) }}">
+    <div class="lessMtlr" *ngIf="isAutocompleteShown">
+      <mat-form-field appearance="outline" class="w-100">
+        <input #airportCodeInput type="text" matInput [matAutocomplete]="autoTo" [(ngModel)]="flight[field]" (input)="onSearchChange($event.target.value)">
+        <mat-autocomplete (optionSelected)="isAutocompleteShown=false" #autoTo="matAutocomplete" [displayWith]="displayFn">
+          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+            {{ (option.value || option.name) + '-' + (option.data || option.id || '') }}
+          </mat-option>
+        </mat-autocomplete>                                     
+      </mat-form-field>
+    </div> 
+</div> 

@@ -1,0 +1,118 @@
+<div class="d-flex flex-column flex-nowrap w-50 m-auto" *ngIf="flightSegment.seatMap">
+    <table class="economyClass mt-5 text-center">
+        <ng-container *ngFor="let cabin of flightSegment.seatMap.cabin">
+            <tr>
+                <td colspan="20" class="h5 p-4">{{cabinTypes[cabin.cabinType.code]}}</td>
+            </tr>
+            <tr *ngFor="let row of cabin.row; odd as isOdd;">
+                <ng-container class="d-flex justify-content-center align-items-center" *ngFor="let seatElement of row.seat; index as i; first as isFirst; last as isLast;">
+                    <td *ngIf="isFirst" [style.width.%] ="cabin.width">{{row.number != null ? row.number.value : ''}}</td>
+                    <td *ngIf="cabin.aisleIndexes.includes(i)" [style.width.%] ="cabin.width"></td>
+                    <td *ngIf="seatElement.isSeatNumberDisplay" [style.width.%] ="cabin.width">{{seatElement.value}}</td>
+                    <td *ngIf="seatElement.notSeat" [style.width.%] ="cabin.width"></td>
+                    <td *ngIf="seatElement.icon != null" [style.width.%] ="cabin.width">
+                        <img class="w-50px" [src]="'assets/media/flightSeat/' + seatElement.icon">
+                    </td>
+                    <td class="pointer"
+                        [attr.rowspan]="rowspanSeat(seatElement)" [attr.colspan]="colspanSeat(seatElement)"
+                        *ngIf="isSeat(seatElement)" [appTooltip]="seatElement"
+                        [ngClass]="getSeatClass(seatElement)" [style.width.%] ="cabin.width"
+                        (click)="seatClick(seatElement, row)">
+                        <span [ngClass]="isSeatSelected(seatElement) ? ' text-light': 'text-muted'" *ngIf="seatElement.seatStatus=='A'">
+                            ${{getSeatPrice(seatElement) | number : '1.2-2'}}
+                        </span>
+                        <div (click)="false; $event.stopPropagation();" *ngIf="seatElement.isPopUp" id="popover" class="popover fade show bs-popover-bottom" role="tooltip" x-placement="bottom">
+                            <div class="arrow" style="bottom: -2px; left: 3%;"></div>
+                            <div class="popover-body font-size-lg p-0">
+                                <div class="d-flex align-items-center flex-wrap justify-content-around p-3">
+                                    <div class="d-flex align-items-center flex-lg-fill w-35">
+                                        <div class="d-flex flex-column flex-wrap">
+                                            <h4 class="mb-1">{{seatElement.rowNumber + seatElement.column}} Seat</h4>
+                                            <div class="d-flex" *ngIf="this.isSeatAvailable(seatElement)">
+                                                <span class="text-dark-50 font-weight-bold mr-2">${{getSeatPrice(seatElement) | number : '1.2-2'}} </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="d-flex align-items-right">
+                                        <div class="d-flex">
+                                            <span class="border-0 border-right-sm border-right-secondary border-solid pt-0 pb-0 pl-5 pr-5">
+                                                <i class="fa fa-fill-drip icon-lg"></i><br>
+                                                <span class="h6">AC</span>
+                                            </span>
+                                            <span class="pt-0 pb-0 pl-5 pr-5">
+                                                <i class="fa fa-fill-drip icon-lg"></i><br>
+                                                <span class="h6">TV</span>
+                                            </span>
+                                        </div>
+                                    </div> -->
+                                </div>
+                                <div class="border-0 border-top-sm border-top-secondary border-solid p-3">
+                                    {{getTooltipText(seatElement)}}
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td *ngIf="isLast" [style.width.%] ="cabin.width">{{row.number != null ? row.number.value : ''}}</td>
+                </ng-container>
+            </tr>
+        </ng-container>
+    </table>
+</div>
+
+<div class="d-none flex-column flex-nowrap overflow-auto">
+    <div class="businessClass mt-5">
+        <div class="font-size-h4 text-center">Business class</div>
+        <div class="seat-row d-flex flex-row p-0">
+            <div class="seat bg-white">A</div>
+            <div class="seat bg-white">B</div>
+            <div class="seat bg-white"></div>
+            <div class="seat bg-white">C</div>
+            <div class="seat bg-white">D</div>
+        </div>
+        <div class="seat-row d-flex flex-row p-0">
+            <div class="seat bg-primary"></div>
+            <div class="seat bg-success"></div>
+            <div class="seat bg-white">1</div>
+            <div class="seat bg-primary"></div>
+            <div class="seat bg-complete"></div>
+        </div>
+        <div class="seat-row d-flex flex-row p-0">
+            <div class="seat bg-danger"></div>
+            <div class="seat bg-complete"></div>
+            <div class="seat bg-white">2</div>
+            <div class="seat bg-success"></div>
+            <div class="seat bg-primary"></div>
+        </div>
+    </div>
+
+    <div class="mainClass mt-5">
+        <div class="font-size-h4 text-center">Main class</div>
+        <div class="seat-row d-flex flex-row p-0">
+            <div class="seat bg-white">A</div>
+            <div class="seat bg-white">B</div>
+            <div class="seat bg-white">C</div>
+            <div class="seat bg-white"></div>
+            <div class="seat bg-white">D</div>
+            <div class="seat bg-white">E</div>
+            <div class="seat bg-white">F</div>
+        </div>
+        <div class="seat-row d-flex flex-row p-0">
+            <div class="seat bg-primary"></div>
+            <div class="seat bg-success"></div>
+            <div class="seat bg-primary"></div>
+            <div class="seat bg-white">3</div>
+            <div class="seat bg-complete"></div>
+            <div class="seat bg-primary"></div>
+            <div class="seat bg-success"></div>
+        </div>
+        <div class="seat-row d-flex flex-row p-0">
+            <div class="seat bg-danger"></div>
+            <div class="seat bg-complete"></div>
+            <div class="seat bg-danger"></div>
+            <div class="seat bg-white">4</div>
+            <div class="seat bg-danger"></div>
+            <div class="seat bg-success"></div>
+            <div class="seat bg-primary"></div>
+        </div>
+    </div>
+</div>
